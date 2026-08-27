@@ -95,6 +95,8 @@ comandos/       the three commands: arrancar, cerrar, simple
 plantillas/     the empty boxes /arrancar copies into a project
 memoria/        the index generator, the hook adder, and their test
 specs/          the decisions (castellano)
+.claude/        this repo's own tooling: settings.json and the verify skill —
+                two of the three seams where a technology may be named
 ```
 
 Two boundaries that must not be crossed:
