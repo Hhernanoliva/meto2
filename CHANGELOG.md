@@ -46,6 +46,15 @@ implementa**, no al publicar.
   que no existe.** Decía `AGENT.md` cuando el archivo del método es `AGENTS.md`.
   Los archivos se creaban perfectos y todas las pruebas pasaban: lo que estaba
   mal era una frase, y un agente la iba a repetir tal cual
+- **`/cerrar` ahora pregunta también por la arquitectura, y siempre pregunta.**
+  Faltaban dos cosas. Una: comprobaba guía, changelog, memoria y cicatrices,
+  pero nunca si la sección de `AGENTS.md` que describe qué hace cada carpeta
+  seguía siendo cierta — que es lo que se pudre en silencio, porque un agente
+  que lee un renglón viejo no pregunta, inventa. Ahora te muestra qué carpetas
+  recibieron archivos nuevos y te hace la pregunta. Dos: si el día estaba
+  tranquilo, el comando terminaba sin ofrecer nada y vos no sabías si era que no
+  había nada o que se había olvidado. Ahora cierra siempre con *"¿escribo
+  alguna? memoria / guía / arquitectura / changelog / nada"*
 - **Las plantillas ya no le imponen el castellano a tu proyecto.** El `CHANGELOG`
   y la guía que `/arrancar` deja llegaban con el andamiaje escrito en
   rioplatense; las otras cuatro plantillas venían en inglés. Ahora llegan las

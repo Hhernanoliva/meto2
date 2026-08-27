@@ -66,6 +66,14 @@ if [ "$HAYGIT" = 1 ]; then
   { gl --name-only --pretty=format: ; git diff --name-only ; git diff --cached --name-only ; } \
     | grep -v '^$' | sort -u | head -60
   echo
+  echo "--- CARPETAS QUE RECIBIERON ARCHIVOS NUEVOS (¿la arquitectura las nombra?)"
+  # Senal, no veredicto: una carpeta que crecio es la pista mas barata de que la
+  # arquitectura declarada quedo vieja. El juicio queda en la persona.
+  NUEVAS=$(gl --diff-filter=A --name-only --pretty=format: | grep -v '^$' \
+    | while read -r f; do d=$(dirname "$f"); [ "$d" = "." ] || echo "$d"; done \
+    | sort -u | head -20)
+  if [ -n "$NUEVAS" ]; then echo "$NUEVAS" | sed 's/^/  /'; else echo "  (ninguna)"; fi
+  echo
   echo "--- SIN COMMITEAR"
   git status --short | head -30
   [ -z "$(git status --short)" ] && echo "  (nada)"
@@ -146,6 +154,13 @@ empty box). For each one that is on:
   anything break in a way that was expensive to find? If so,
   it is a candidate for *Rules That Cost Us* — and only then. A preference is not
   a rule. Show what changed and let the person decide.
+- **Architecture** — did the range add a module, move a responsibility, or
+  create a boundary that `AGENTS.md` › *Application Architecture* does not
+  describe? The script prints which folders received new files: that is a
+  signal, not a verdict. Three things rot there and none of them break a test —
+  a folder with no line, a line describing what a folder *used to* own, and a
+  boundary nobody wrote down ("only X touches Y"), which the next agent crosses
+  without knowing it existed. Show what changed; the person decides.
 - **Memory** — the generator's exit code. Non-zero names the incomplete file.
 
 ### Half 2 — what is NOT active yet: has its trigger been met?
@@ -160,6 +175,20 @@ For each rule that is still off, ask the question out loud, once:
 
 **This half is why the command exists.** The missing part of the method does not
 depend on anyone remembering it: it asks itself, every close.
+
+## Step 3 — the closing question, always
+
+End with one question, out loud, **even when nothing above triggered**:
+
+> Shall I write any of these? **memory / guide / architecture / changelog /
+> nothing.**
+
+Ask it in the conversation's human language. Ask it on a quiet day too: *nothing
+to write today* is a valid close, and hearing it is not the same as silence.
+
+Without this line, writing stays a second step the person has to remember on
+their own — and remembering is the exact thing this command exists to replace.
+Then, and only then, write what they picked.
 
 ## Rules for you while doing this
 

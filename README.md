@@ -160,6 +160,25 @@ Y **nunca escribe por su cuenta**. Comprueba, avisa y ofrece. Un cierre que
 escribiera memorias solo las fabricaría justo en el momento de menos contexto
 disponible — que es exactamente cuando salen mal y encima parecen ciertas.
 
+### Son dos pasos, y el segundo es tuyo
+
+`/cerrar` comprueba y **ofrece**; vos elegís; recién ahí el agente escribe. Por eso
+termina siempre con la misma pregunta, aunque el día haya estado tranquilo:
+
+```
+¿escribo alguna?  memoria / guía / arquitectura / changelog / nada
+```
+
+*Nada* es una respuesta válida, y conviene decirla en voz alta: no es lo mismo
+que el silencio.
+
+**Arquitectura** es la sección de `AGENTS.md` que dice qué le pertenece a cada
+carpeta y qué frontera no se cruza. Se pudre de tres maneras y ninguna rompe un
+test: una carpeta nueva sin renglón, un renglón que describe lo que la carpeta
+*solía* hacer, y una frontera que nadie escribió —*"esto se toca sólo desde
+acá"*— que el próximo agente cruza sin enterarse de que existía. `/cerrar` te
+muestra qué carpetas recibieron archivos nuevos; el juicio queda en vos.
+
 También **detecta en vez de leer configuración**: mira si existen `docs/guia/`,
 `CHANGELOG.md` y el archivo del método. Por eso funciona igual en un proyecto de
 hoy y en uno
