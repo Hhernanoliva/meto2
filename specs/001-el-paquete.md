@@ -455,6 +455,48 @@ La lección de fondo, y va a *Verification Rules*: **el entorno de prueba que no
 es el del usuario produce verdes que no valen**. Es la meta-regla 1 —medir el
 entorno— aplicada al que prueba, no al que falla.
 
+## El recibo: qué ahorra y qué cuesta, medido
+
+Medido el 2026-08-27 con `/context`, en una carpeta nueva, comparando la sesión
+del `/arrancar` contra la sesión siguiente (los complementos se leen **una sola
+vez al abrir**, así que el efecto sólo se ve al reiniciar).
+
+| | antes | después |
+|---|---|---|
+| skills anunciadas | 138 (10.000 tokens) | **54 (5.900)** |
+| agentes | 30 (2.400) | **7 (542)** |
+| archivos del método | 2.100 | **6.000** |
+| herramientas del sistema | 10.100 | **14.200** |
+| **peaje fijo total** | **28.300** | **30.300** |
+
+**La pregunta central del paquete quedó contestada: el `false` por proyecto
+funciona.** Si sólo hubiera servido el cambio global, quedaban 113 skills y 12
+agentes; quedaron 54 y 7. No hay otra explicación para esa diferencia.
+
+Y el saldo honesto, que incluye lo que el método **cuesta**:
+
+```
+ahorra al apagar complementos   +6.000
+cuesta con sus propios archivos −2.700   (AGENTS.md 2.128 + CLAUDE.md 572)
+─────────────────────────────────────
+saldo de meto2                  +3.300 por sesión  (≈ 11% del peaje)
+```
+
+Dos cosas que la medición obliga a decir, y que ninguna versión optimista diría:
+
+1. **El método no es gratis.** Sus dos archivos cuestan ~2.700 tokens en cada
+   sesión, **con `AGENTS.md` todavía vacío de respuestas**. Llenarlo lo duplica o
+   lo triplica. En el proyecto de origen ese archivo llegó a 97 KB; el precio de
+   arranque ahora está medido, y sube.
+2. **El peaje total SUBIÓ 2.000 igual**, porque las herramientas del sistema
+   crecieron 4.100 por un motivo que **no está identificado**. No se inventa una
+   explicación: queda anotado como no explicado. Probablemente no es meto2, pero
+   sin medirlo eso también sería una suposición.
+
+Y la proporción, que es la conclusión que más importa: 3.300 sobre 30.000 es un
+11%. El contexto largo y las respuestas largas cuestan más que todos los
+complementos juntos. **Este paso vale la pena y no es la palanca grande.**
+
 ## Riesgos
 
 - **Culto al cargo** (el N°1): copiar el contenido de aquel proyecto en vez de su
