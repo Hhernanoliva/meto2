@@ -1,5 +1,5 @@
 ---
-description: Set up the meto2 method in the current project folder (5 files, 4 folders, memory).
+description: Set up the meto2 method in the current project folder (8 files, 4 folders, memory).
 allowed-tools: Bash, Read, Edit, Write, AskUserQuestion
 ---
 

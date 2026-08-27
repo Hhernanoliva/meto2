@@ -8,9 +8,9 @@ implementa**, no al publicar.
 
 ## 0.1.0 — sin publicar
 
-- **`/arrancar` te deja el método entero en cualquier carpeta.** Cinco archivos y
-  cuatro carpetas, más la memoria del proyecto arrancada y el `.mcp.json`
-  apuntando a esa carpeta. No hace `git init` ni instala nada: el proyecto ya
+- **`/arrancar` te deja el método entero en cualquier carpeta.** Ocho archivos
+  —cinco para leer y tres de plomería— y cuatro carpetas, más la memoria del
+  proyecto arrancada y el `.mcp.json` apuntando a esa carpeta. No hace `git init` ni instala nada: el proyecto ya
   existe, esto le agrega la forma de trabajar encima. Correrlo dos veces no pisa
   nada: lo que ya estaba se nombra y se deja como estaba
 - **Los archivos llegan con preguntas, no con respuestas.** Una sección en blanco

@@ -26,6 +26,12 @@ git clone https://github.com/Hhernanoliva/meto2.git ~/Projects/meto2
 Necesitás **Claude Code** ya instalado, más `git`, `curl` y `python3`. Anda en
 Mac y en Linux; en Windows todavía no.
 
+Un detalle que le toca sólo a quien vaya a abrir **meto2 en sí** con Claude Code,
+no a quien lo use en sus proyectos: el `.mcp.json` de este repo trae adentro la
+ruta de la máquina donde se escribió. Cambiá ese único renglón
+(`CBM_ALLOWED_ROOT`) por la ruta de tu copia. No es un olvido y no es silencioso:
+`/cerrar` lo compara con la carpeta actual y te avisa.
+
 ### Paso 1 — una vez por computadora
 
 ```bash
@@ -34,11 +40,9 @@ bash ~/Projects/meto2/instalar.sh
 
 Ojo, y lo decimos acá porque conviene saberlo antes: este paso **baja software de
 internet que no es nuestro** —cuatro complementos de Claude Code y un programa de
-otra gente— y para uno de ellos usa el instalador oficial de ellos. Te dice qué y
-de dónde antes de bajar nada, y espera tu sí.
-
-Antes de bajar nada te dice **qué** va a bajar y **de dónde**, y espera el sí.
-Una sola vez, no paso por paso. Al final imprime tres partes, siempre las tres:
+otra gente— y para uno de ellos usa el instalador oficial de ellos. Antes de
+bajar nada te dice **qué** va a bajar y **de dónde**, y espera tu sí. Una sola
+vez, no paso por paso. Al final imprime tres partes, siempre las tres:
 
 ```
 ✅ Instalado:   ...
@@ -56,6 +60,10 @@ sólo apunta a tu `~/.claude/CLAUDE.md`, donde eso lo escribís vos.
 
 ### Paso 2 — una vez por proyecto
 
+Si tenías Claude Code abierto mientras corría el paso 1, **cerralo y abrilo de
+nuevo**. La lista de comandos la lee una sola vez, al empezar la sesión: hasta que
+no reabras, `/arrancar` no le figura. No es que el instalador haya fallado.
+
 Entrá con Claude Code a la carpeta del proyecto y escribí:
 
 ```
@@ -70,7 +78,7 @@ se nombra.
 
 ## Tu primer proyecto, en tres pasos
 
-1. **`/arrancar`.** Aparecen cinco archivos y cuatro carpetas. Todos los archivos
+1. **`/arrancar`.** Aparecen ocho archivos y cuatro carpetas. Todos los archivos
    están llenos de **preguntas, no de respuestas**. Eso es correcto.
 2. **Contestá `AGENTS.md`.** Qué es esto y para quién, con qué está hecho, y en
    qué idioma se le habla a la persona. Diez minutos. Es lo único que hay que
@@ -89,9 +97,13 @@ se nombra.
 | `docs/guia-de-uso.md` | el índice de la guía para quien usa la app |
 | `CHANGELOG.md` | qué cambió en cada versión, contado para quien la usa |
 
-Más cuatro carpetas (`specs/`, `docs/guia/`, `docs/superpowers/`, `.claude/`), el
-`.mcp.json` apuntando a esta carpeta, la skill `verify` en blanco con sus
-preguntas, y la memoria del proyecto arrancada.
+Ésos son los cinco que vas a leer. Vienen con tres más, de plomería: el
+`.mcp.json` apuntando a esta carpeta, el `.claude/settings.json` que decide qué
+herramientas se encienden y cuáles son ruido, y la skill `verify` en blanco con
+sus preguntas. Ocho en total.
+
+Más cuatro carpetas (`specs/`, `docs/guia/`, `docs/superpowers/`, `.claude/`) y la
+memoria del proyecto arrancada.
 
 ### Los tres disparadores
 
@@ -172,8 +184,13 @@ archivo o no?". Nada más. Lo de adentro no se resume ahí.
 `MEMORY.md` y `ARCHIVO.md` **se generan, no se editan a mano**:
 
 ```bash
-python3 memoria/generar-indice.py ~/.claude/projects/<tu-proyecto>/memory
+python3 ~/Projects/meto2/memoria/generar-indice.py \
+  "$HOME/.claude/projects/$(pwd | sed 's/[^A-Za-z0-9]/-/g')/memory"
 ```
+
+Se corre **parado en tu proyecto** y calcula solo dónde vive su memoria: el nombre
+de esa carpeta es la ruta completa del proyecto con cada carácter que no sea letra
+ni número cambiado por un guion. No hay que escribirla a mano ni saberla.
 
 Hay **una sola copia** del generador, ésta, para todos los proyectos. Copiarla a
 cada uno haría que un arreglo no llegue nunca a los viejos.
