@@ -14,15 +14,17 @@ anything done.
 
 ## Memory
 
-This project's memory lives in
-`~/.claude/projects/-Users-hernanoliva-Projects-meto2/memory`.
+This project's memory lives under `~/.claude/projects/<slug>/memory`, where
+`<slug>` is this folder's absolute path with every non-alphanumeric character
+replaced by `-`. It is derived, never configured.
 
 One fact per file, with a header. Four fields under `metadata:` — `type`,
 `titulo`, `estado`, `verificado` — and `description:` is the **only routing
 line**. `MEMORY.md` and `ARCHIVO.md` are **generated, never hand-edited**:
 
 ```bash
-python3 memoria/generar-indice.py ~/.claude/projects/-Users-hernanoliva-Projects-meto2/memory
+python3 memoria/generar-indice.py \
+  "$HOME/.claude/projects/$(pwd | sed 's/[^A-Za-z0-9]/-/g')/memory"
 ```
 
 It exits 1 and names the file when a field is missing. Missing `estado` falls
@@ -37,4 +39,7 @@ before every message: *re-read Collaboration Style and Human Language in
 `false` means this project decided; an absent entry means nobody did.
 
 `.mcp.json` names `codebase-memory-mcp` by name, not by path. Its one
-project-specific line is `CBM_ALLOWED_ROOT`, which must point at this folder.
+project-specific line is `CBM_ALLOWED_ROOT`, which must point at this folder —
+so **if you cloned this repository it points at somebody else's machine**. That
+is not an oversight and it is not silent: `/cerrar` compares it against the
+current folder and says so. Fix the one line and move on.
