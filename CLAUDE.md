@@ -1,47 +1,40 @@
-# meto2 — instrucciones para Claude Code
+@AGENTS.md
 
-## Qué es esto
+# Claude Code plumbing for meto2
 
-`meto2` empaqueta **un método de trabajo** para arrancar proyectos nuevos:
-plantillas vacías, tres comandos (`/arrancar`, `/cerrar`, `/simple`), el sistema
-de memoria y un instalador.
+`AGENTS.md`, imported above, is the method and the source of truth. This file
+holds only what is specific to Claude Code. If the two disagree, `AGENTS.md`
+wins and this file is the one that is wrong.
 
-**Leé `specs/001-el-paquete.md` antes de tocar nada.** Es la fuente de verdad:
-qué viaja y qué no, las dos etapas de instalación, las plantillas archivo por
-archivo, el gate a mano de 6 pasos y las decisiones A–E del final.
+## Verification Skill
 
-## Este proyecto NO ES de ningún stack
+`.claude/skills/verify/SKILL.md` says how to check this package end to end: the
+tests, the agnostic grep, and the 6-step manual gate. Run it before calling
+anything done.
 
-Un `~/.claude/CLAUDE.md` global suele traer reglas de una tecnología. **Acá no
-aplican.** `meto2` es shell + markdown + dos programas de Python, y su núcleo es
-agnóstico del stack **a propósito**: si una plantilla nombra una tecnología fuera
-de las tres costuras declaradas en la spec, está mal.
+## Memory
 
-Sí sigue valiendo del global: explicar en castellano y sin jerga (el autor no es
-ingeniero), y aprobar el plan antes de escribir código.
+This project's memory lives in
+`~/.claude/projects/-Users-hernanoliva-Projects-meto2/memory`.
 
-## La distinción que decide todo
-
-Lo que viaja es **la forma** (que exista una sección de reglas ganadas a golpes,
-que las specs estén numeradas, que la guía se escriba en el mismo commit), no
-**el contenido** (las reglas concretas de ningún proyecto). Copiar contenido en
-vez de forma es el riesgo N°1 y tiene una prueba mecánica en la spec, sección
-*La prueba del núcleo agnóstico*.
-
-## Antes de dar algo por listo
-
-Corré el gate a mano de 6 pasos de la spec, y las dos pruebas de los programas:
+One fact per file, with a header. Four fields under `metadata:` — `type`,
+`titulo`, `estado`, `verificado` — and `description:` is the **only routing
+line**. `MEMORY.md` and `ARCHIVO.md` are **generated, never hand-edited**:
 
 ```bash
-python3 memoria/prueba.py                 # los dos scripts de memoria
-grep -riE 'svelte|tailwind|react|vue|django|rails|pnpm|npm run|/Users/|/home/' \
-  plantillas/ comandos/ | grep -v 'Technical Direction' | grep -v 'skills/verify' \
-  | grep -v 'settings.json'               # tiene que dar CERO
+python3 memoria/generar-indice.py ~/.claude/projects/-Users-hernanoliva-Projects-meto2/memory
 ```
 
-## Cómo se trabaja acá
+It exits 1 and names the file when a field is missing. Missing `estado` falls
+back to `vigente` — the memory stays in the index rather than vanishing.
 
-- Plan en castellano simple, aprobación, después código.
-- Commitear a medida que se avanza, no todo junto al final.
-- Nada se da por bueno sin correrlo. Las decisiones de la spec que dicen
-  *"medido"* se midieron; las demás son opiniones y están marcadas como tales.
+## Tooling
+
+`.claude/settings.json` does two things. Its `hooks` block re-injects one line
+before every message: *re-read Collaboration Style and Human Language in
+`AGENTS.md`*. It **points, it never copies**, so it cannot go stale. Its
+`enabledPlugins` block turns off what this project does not use — an explicit
+`false` means this project decided; an absent entry means nobody did.
+
+`.mcp.json` names `codebase-memory-mcp` by name, not by path. Its one
+project-specific line is `CBM_ALLOWED_ROOT`, which must point at this folder.

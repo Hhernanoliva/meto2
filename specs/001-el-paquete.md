@@ -15,7 +15,15 @@ spec toma* al final, marcado para poder darlo vuelta.
 > **Publicarlo enciende dos disparadores de golpe**: pasa a haber un usuario que
 > no es el autor (⇒ la guía se activa) y una versión distribuible (⇒ el
 > changelog se activa). Eso lo detectó el propio `/cerrar` corriendo sobre este
-> repo. No publicar sin resolverlo.
+> repo. **Resuelto el mismo día**: `meto2` pasó a usar su propio método —
+> `AGENTS.md` propio, `CLAUDE.md` de cañería, `CHANGELOG.md` 0.1.0, skill
+> `verify`, `.mcp.json` y la decisión de complementos. La guía se declaró
+> explícitamente como `README.md` en vez de `docs/guia/`, porque para un paquete
+> de un instalador y tres comandos una carpeta de temas es más estructura que
+> contenido — es el riesgo *Escala* de este mismo documento, aceptado y escrito.
+>
+> **Falta sólo decidir si se publica**, más dos cosas menores: nunca se probó en
+> Linux, y el `README` está sólo en castellano.
 
 ## En criollo (el resumen sin jerga)
 

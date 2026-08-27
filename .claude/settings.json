@@ -1,0 +1,30 @@
+{
+  "enabledPlugins": {
+    "caveman@caveman": true,
+    "claude-seo@agricidaniel-seo": false,
+    "context7@context7-marketplace": true,
+    "impeccable@impeccable": false,
+    "mercadopago@mercadopago-claude-marketplace": false,
+    "ponytail@ponytail": true,
+    "rust-analyzer-lsp@claude-plugins-official": false,
+    "superpowers@claude-plugins-official": true,
+    "svelte-skills@svelte-skills-kit": false,
+    "toolkit-skills@claude-code-toolkit": false,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": false,
+    "vercel@claude-plugins-official": false,
+    "warp@claude-code-warp": false
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Before answering: re-read Collaboration Style and Human Language in AGENTS.md, and write for THAT reader. A rule read once at startup loses to everything that arrives after it.'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
