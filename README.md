@@ -53,9 +53,9 @@ se nombra.
 
 1. **`/arrancar`.** Aparecen cinco archivos y cuatro carpetas. Todos los archivos
    están llenos de **preguntas, no de respuestas**. Eso es correcto.
-2. **Contestá `AGENT.md` y `CLAUDE.md`.** Qué es esto y para quién, con qué está
-   hecho, y en qué idioma se le habla a la persona. Diez minutos. Es lo único que
-   hay que hacer a mano, y es lo que hace que ningún agente vuelva a preguntarlo.
+2. **Contestá `AGENTS.md`.** Qué es esto y para quién, con qué está hecho, y en
+   qué idioma se le habla a la persona. Diez minutos. Es lo único que hay que
+   hacer a mano, y es lo que hace que ningún agente vuelva a preguntarlo.
 3. **Trabajá.** Al final del día, `/cerrar`.
 
 ---
@@ -64,8 +64,8 @@ se nombra.
 
 | archivo | para qué |
 |---|---|
-| `AGENT.md` | lo que un agente tiene que saber **siempre**, antes de tocar nada |
-| `CLAUDE.md` | las reglas de este proyecto y los punteros al resto |
+| `AGENTS.md` | **el método entero**: lo que un agente tiene que saber siempre, antes de tocar nada |
+| `CLAUDE.md` | diez renglones: importa `AGENTS.md` y agrega sólo lo propio de Claude Code |
 | `specs/README.md` | el índice de las decisiones tomadas antes de programar |
 | `docs/guia-de-uso.md` | el índice de la guía para quien usa la app |
 | `CHANGELOG.md` | qué cambió en cada versión, contado para quien la usa |
@@ -93,7 +93,7 @@ como un olvido:
 Dos mitades:
 
 ```
-lo que YA está activo   → ¿está hecho?   (guía, changelog, AGENT.md, memoria)
+lo que YA está activo   → ¿está hecho?   (guía, changelog, AGENTS.md, memoria)
 lo que TODAVÍA NO       → ¿ya se cumplió el disparador? ¿lo encendemos?
 ```
 
@@ -105,7 +105,8 @@ escribiera memorias solo las fabricaría justo en el momento de menos contexto
 disponible — que es exactamente cuando salen mal y encima parecen ciertas.
 
 También **detecta en vez de leer configuración**: mira si existen `docs/guia/`,
-`CHANGELOG.md` y `AGENT.md`. Por eso funciona igual en un proyecto de hoy y en uno
+`CHANGELOG.md` y el archivo del método. Por eso funciona igual en un proyecto de
+hoy y en uno
 anterior a que este método existiera.
 
 ---
@@ -159,7 +160,7 @@ cambio ya está identificado y es chico.
 El stack entra por **tres costuras, y sólo tres**:
 
 1. `.claude/settings.json` — qué herramientas se encienden y cuáles son ruido.
-2. `AGENT.md` › *Technical Direction* — el stack declarado en palabras.
+2. `AGENTS.md` › *Technical Direction* — el stack declarado en palabras.
 3. `.claude/skills/verify/` — cómo se prende, se compila y se maneja esta app.
 
 Fuera de esas tres, nombrar una tecnología es un error. Hay una prueba mecánica:
@@ -174,13 +175,37 @@ grep -riE 'svelte|tailwind|pnpm|dexie|copynotes|hernan|/Users/' plantillas/ coma
 
 ## Dos idiomas, a propósito
 
-Lo que lee **una máquina** (`AGENT.md`, `CLAUDE.md`, las specs, las skills, los
+Lo que lee **una máquina** (`AGENTS.md`, `CLAUDE.md`, las specs, las skills, los
 comandos) va en **inglés**. Lo que lee **una persona** (`docs/guia/`,
 `CHANGELOG.md`, este README, la conversación) va en **el idioma del usuario**,
 declarado en `CLAUDE.md` de cada proyecto. Declarado, nunca supuesto.
 
 Los comandos se llaman `/arrancar` y `/cerrar` en castellano. Si algún día esto
 viaja de verdad, se les agregan alias en inglés y no se rompe nada.
+
+---
+
+## ¿Y si uso otro agente que no es Claude Code?
+
+**El método viaja; la cañería no.** Y eso es a propósito.
+
+Todo lo que importa vive en **`AGENTS.md`** — que es el nombre que Codex, Cursor y
+OpenCode ya leen solos. Junto con `specs/`, `docs/guia/`, `CHANGELOG.md` y el
+generador de memoria, es markdown y Python: lo abre cualquiera.
+
+`CLAUDE.md` quedó de diez renglones y no lleva método adentro: sólo importa
+`AGENTS.md` en su primera línea y agrega lo que **únicamente** existe en Claude
+Code. Si los dos alguna vez se contradijeran, gana `AGENTS.md`.
+
+**Un detalle que medí y conviene saber:** Claude Code **no** carga un `AGENTS.md`
+suelto. Lo carga a través de ese `@AGENTS.md` de la primera línea del `CLAUDE.md`.
+Por eso los dos archivos siguen existiendo — y por eso el archivo del método ahora
+entra **cargado** en vez de *pedido*, que es lo que pasaba antes.
+
+Lo que **no** viaja, y no pienso portarlo hasta que haga falta de verdad: los
+comandos `/arrancar` y `/cerrar` (aunque son markdown legible, así que cualquier
+agente puede abrir el archivo y hacer lo que dice), la memoria y la lista de
+complementos apagados.
 
 ---
 

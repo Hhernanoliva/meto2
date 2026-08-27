@@ -1,12 +1,46 @@
 # <PROJECT NAME>
 
-Source of truth for product direction, architecture, and quality bar. Detailed
-feature decisions live in `specs/` — this file is the map, the specs are the
-territory.
+Source of truth for how this project is built: product direction, architecture,
+quality bar, and the rules that are not optional. Detailed feature decisions live
+in `specs/` — this file is the map, the specs are the territory.
+
+**Every agent working here reads this file first, whichever tool it runs in.**
+Tool-specific plumbing lives elsewhere and is named at the bottom; the method is
+here.
 
 > **This file starts as questions, not answers.** Replace each question with the
 > real answer as the project decides it. A section left as a question is honest;
 > a section filled with a plausible guess is a lie an agent will act on.
+
+## Read This First
+
+- **Read this whole file before any work.** Never contradict it.
+- Before implementing a meaningful feature, read the relevant spec in `specs/`
+  (index in `specs/README.md`).
+- **Commit as you go, not all at once at the end.**
+
+## This Project Outranks Global Rules
+
+Your tool almost certainly loads a global instructions file of its own — one that
+applies to **every** project on this machine, including the ones it was never
+written for. If it names a stack, a package manager, a UI flow or a testing
+convention, **none of that applies here unless *Technical Direction* below says
+it does.**
+
+Write the exception down here the first time it bites — one line naming what does
+not apply and why. A rule inherited from a project this is not costs an agent a
+wrong assumption in every session, and nothing in the code will ever contradict
+it: it fails silently, as a suggestion that sounds informed.
+
+## Human Language
+
+The human language of this project is: **<DECLARE IT HERE>**.
+
+Everything a person reads — `docs/guia/`, `CHANGELOG.md`, the conversation — is
+written in that language. Everything a machine reads — this file, the specs, the
+skills, the commands — is written in English.
+
+This is a setting, not a guess. Fill it in before the first commit.
 
 ## Product Vision
 
@@ -15,10 +49,9 @@ audience? What is the current status — what is built, what is being built now?
 
 ## Collaboration Style
 
-*How should decisions be explained, and to whom? In which human language, at what
-level of technical detail? (The human language of this project is declared in
-`CLAUDE.md` — never assumed.) The goal: the person reading can approve, reject,
-or adjust with confidence.*
+*How should decisions be explained, and to whom? At what level of technical
+detail? The goal: the person reading can approve, reject, or adjust with
+confidence.*
 
 ## Product Principles
 
@@ -33,8 +66,7 @@ decisions already locked (with a pointer to the spec that locked them). Also wha
 was rejected and why, so nobody re-opens it by accident.*
 
 > This is one of the three places in this method where a technology may be named.
-> The other two are `.claude/settings.json` and `.claude/skills/verify/`.
-> Everywhere else, naming a technology is a bug.
+> The other two are the tool settings file and the verification skill.
 
 ## Application Architecture
 
@@ -55,7 +87,7 @@ every future agent the context to read it.
 How to write one when the day comes:
 
 - **The heading is the lesson, not the bug.** "A read-only lock is not the
-  `contenteditable`" — not "fixed bug #47".
+  editable attribute" — not "fixed bug #47".
 - Say what was measured, not what was assumed.
 - Say what the wrong version looked like from outside, because that is how the
   next person will meet it again.
@@ -88,7 +120,7 @@ working with agents, and they were paid for in another project.
 **brainstorm → spec → plan → TDD → manual gate → merge.**
 
 - **brainstorm** — intent and requirements, before any design.
-- **spec** — a numbered file in `specs/`; see `specs/README.md`.
+- **spec** — a numbered file in `specs/`; see the rule below.
 - **plan** — the slices and what "done" means for each.
 - **TDD** — the test fails first, for the right reason, and names its file.
 - **manual gate** — a person drives the real thing. Rule 8 is why.
@@ -96,8 +128,45 @@ working with agents, and they were paid for in another project.
 
 ### Commit conventions
 
-*Declare them here: message format, what one commit is allowed to contain, and
-what must ride along in the same commit (see the trigger table in `CLAUDE.md`).*
+*Declare them here: message format, and what one commit is allowed to contain.
+What must ride along in the same commit is set by the three rules below.*
+
+## The Specs Rule
+
+Every meaningful feature gets a numbered spec in `specs/` before it is built.
+Sections: Objective / What enters / What does not / Data / Flows / Acceptance /
+Tests / Agent notes.
+
+**Trigger:** the first feature that needs decisions made *before* code. Until
+then, `specs/` is empty on purpose and `specs/README.md` says so.
+
+## The User Guide Rule
+
+The user-facing guide, in this project's human language, lives in `docs/guia/`
+(one file per topic; index at `docs/guia-de-uso.md`). Every user-visible feature
+or behavior change is documented **in the same commit that implements it** — edit
+the topic file it touches, or create a new one and add it to the index. Update
+the index's last-updated line too.
+
+Specs describe intent for builders; the guide describes usage for people. No
+technical jargon.
+
+**Trigger:** there is a user who is not you. Until then this rule is written down
+and not yet active, and `docs/guia-de-uso.md` says so.
+
+## The Changelog Rule
+
+`CHANGELOG.md` at the root is what a person reads to find out what changed. Every
+user-visible change adds its bullet to the section of the version in progress
+**in the same commit that implements it**. In the project's human language, one
+bullet per change, no jargon.
+
+Writing it at release time does not work: by then the change is a diff nobody can
+translate back into a sentence, and whatever build step reads this file has
+already run.
+
+**Trigger:** there is a first distributable version. Until then, `CHANGELOG.md`
+says so.
 
 ## Quality Bar
 
@@ -121,3 +190,10 @@ spec without reading all of them.*
 change safely: explicit architecture, small focused modules, clear feature
 boundaries, no clever abstractions, decisions documented in specs, tests around
 risky behavior.*
+
+## Tool-Specific Plumbing
+
+Three things are **not** in this file because they differ per tool: how to launch
+and drive this app, which tools this project turns off, and where this project's
+memory lives. If your tool loads a file of its own next to this one, that is
+where they are named. Do not invent your own version of any of them.

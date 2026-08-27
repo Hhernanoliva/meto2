@@ -13,7 +13,7 @@ spec toma* al final, marcado para que Hernán lo dé vuelta si quiere.
 ## En criollo (resumen para Hernán)
 
 CopyNotes no salió bien por el código. Salió bien por **cómo se trabajó**: hay
-un `AGENT.md` que un agente lee antes de tocar nada, specs numeradas, una guía
+un `AGENTS.md` que un agente lee antes de tocar nada, specs numeradas, una guía
 que se escribe en el mismo commit, un changelog con vencimiento real, y una
 memoria que se genera sola y grita cuando le falta algo.
 
@@ -43,6 +43,8 @@ CopyNotes, de Hernán, ni de esta máquina**.
 - **No** toca CopyNotes. CopyNotes es la fuente: se lee, no se modifica.
 - **No** arregla las dos deudas que el brief destapó en CopyNotes (el `AGENT.md`
   de 97 KB y las reglas duplicadas entre `AGENT.md` y memoria). Trabajo aparte.
+- **No** porta los comandos, la memoria ni la lista de complementos a otros
+  agentes. Ver la decisión **D**: el método viaja en `AGENTS.md`, la cañería no.
 
 ## La distinción que decide todo: forma vs contenido
 
@@ -66,7 +68,7 @@ prueba mecánica, abajo en *La prueba del núcleo agnóstico*.
    activa después": sin disparador, nunca se activa.
 3. **El núcleo es agnóstico del stack.** No trae capa de SvelteKit ni de ninguna
    otra: traer una capa lista ya es decirle al que llega cuál es el stack bendecido.
-4. **Idioma en dos capas:** lo que lee la máquina (`AGENT.md`, `CLAUDE.md`,
+4. **Idioma en dos capas:** lo que lee la máquina (`AGENTS.md`, `CLAUDE.md`,
    skills, comandos, specs) en **inglés**; lo que lee la persona (`docs/guia/`,
    `CHANGELOG.md`, el tutorial, la conversación) en **el idioma del usuario**,
    declarado en `CLAUDE.md`, nunca supuesto.
@@ -87,7 +89,7 @@ meto2/
   memoria/
     generar-indice.py                # el generador, UNA copia para todos los proyectos
   plantillas/
-    AGENT.md
+    AGENTS.md
     CLAUDE.md
     CHANGELOG.md
     specs/README.md
@@ -149,8 +151,8 @@ Crea **5 archivos**:
 
 | archivo | qué es |
 |---|---|
-| `AGENT.md` | lo que un agente debe saber siempre |
-| `CLAUDE.md` | las reglas del proyecto y los punteros |
+| `AGENTS.md` | **el método entero**: lo que un agente debe saber siempre, lea el tool que lea |
+| `CLAUDE.md` | ~10 renglones: importa `AGENTS.md` y agrega sólo la cañería de Claude Code |
 | `specs/README.md` | el índice de specs |
 | `docs/guia-de-uso.md` | el índice de la guía |
 | `CHANGELOG.md` | la versión en curso |
@@ -186,11 +188,20 @@ Además:
 existe, esto le agrega el método encima.
 
 Correrlo dos veces no rompe nada: lo que ya existe no se pisa, se nombra
-(*"ya tenías `AGENT.md`, lo dejé como estaba"*).
+(*"ya tenías `AGENTS.md`, lo dejé como estaba"*).
 
 ## Las plantillas
 
-### `AGENT.md` (inglés)
+### `AGENTS.md` (inglés) — el método entero
+
+**El nombre no es cosmético y se midió** (2026-08-27, con control):
+`AGENTS.md` a secas **no** lo carga Claude Code, pero un `CLAUDE.md` cuya primera
+línea es `@AGENTS.md` **sí**, y `AGENTS.md` es el nombre que Codex, Cursor y
+OpenCode ya leen nativo. Antes de esto, el archivo del método se leía **sólo
+porque `CLAUDE.md` le pedía al agente que lo abriera** —una instrucción, o sea
+algo que se puede desobedecer—; ahora entra cargado. La división entre los dos
+archivos pasa a ser una pregunta contestable: *¿esto es el método, o es la
+cañería de una herramienta?*
 
 Secciones, todas presentes, todas con su pregunta adentro en vez de contenido:
 
@@ -230,21 +241,29 @@ Secciones, todas presentes, todas con su pregunta adentro en vez de contenido:
 Más el flujo — **brainstorm → spec → plan → TDD → gate a mano → merge** — y las
 convenciones de commit.
 
-### `CLAUDE.md` (inglés)
+Adentro de `AGENTS.md` van, además de las secciones de arriba:
 
-- *Read `AGENT.md` before any work.*
-- **Que este archivo le gana al `CLAUDE.md` global.** Agregado el 2026-08-27,
-  después de ver que el propio `meto2` necesitó exactamente esa sección: un
-  global con reglas de un stack se aplica a todos los proyectos de la máquina,
-  incluso a los que no son de ese stack, y falla en silencio — como una
-  sugerencia que suena informada. `instalar.sh` avisa una vez; esta línea es la
-  que lo arregla en cada proyecto.
-- Dónde viven las specs y cuándo se escribe una.
+- **Que este proyecto le gana a las reglas globales de tu herramienta.** Agregado
+  el 2026-08-27, después de ver que el propio `meto2` necesitó exactamente esa
+  sección: un archivo global con reglas de un stack se aplica a todos los
+  proyectos de la máquina, incluso a los que no son de ese stack, y falla en
+  silencio — como una sugerencia que suena informada. `instalar.sh` avisa una
+  vez; esta sección es la que lo arregla en cada proyecto.
+- **El idioma humano del proyecto**, declarado. Es un ajuste, no una suposición.
+- **La regla de las specs**, con su disparador escrito al lado.
 - **La regla de la guía**, con su disparador escrito al lado.
 - **La regla del changelog**, con su disparador escrito al lado.
-- **El idioma humano del proyecto**, declarado. Es un ajuste, no una suposición.
-- Puntero a la memoria y a su generador.
 - Commitear a medida que se avanza.
+- Un cierre que nombra las tres cosas que **no** están ahí porque cambian según
+  la herramienta —cómo se prende la app, qué se apaga, dónde vive la memoria— y
+  dice que no se inventen.
+
+### `CLAUDE.md` (inglés) — sólo la cañería de Claude Code
+
+Primera línea `@AGENTS.md`, y después nada más que lo que no es portable: la
+skill `verify`, dónde vive la memoria y cómo se corre su generador, y qué
+significan `.claude/settings.json` y `.mcp.json`. Si los dos archivos se
+contradicen, **gana `AGENTS.md`**, y está escrito ahí.
 
 ### `specs/README.md`, `docs/guia-de-uso.md`, `CHANGELOG.md`
 
@@ -292,7 +311,7 @@ cierre), y no nombraba el `CHANGELOG`, el único con vencimiento real.
 `/cerrar` hace **dos mitades**:
 
 ```
-lo que YA está activo   → ¿está hecho?  (guía, changelog, AGENT.md, memoria)
+lo que YA está activo   → ¿está hecho?  (guía, changelog, AGENTS.md, memoria)
 lo que TODAVÍA NO       → ¿ya se cumplió el disparador? ¿lo encendemos?
 ```
 
@@ -307,11 +326,12 @@ Comprobaciones concretas:
 | ¿y sin tocar `CHANGELOG.md`? | idem |
 | ¿el generador de memoria sale con código 0? | corriéndolo |
 | ¿`CBM_ALLOWED_ROOT` apunta a esta carpeta? | leyendo `.mcp.json` |
-| ¿alguna regla nueva merece entrar en `AGENT.md`? | pregunta, con lo que cambió a la vista |
+| ¿alguna regla nueva merece entrar en `AGENTS.md`? | pregunta, con lo que cambió a la vista |
 | ¿algún disparador apagado ya se cumplió? | pregunta |
 
 **Detecta, no lee configuración**: ¿existe `docs/guia/`? ¿`CHANGELOG.md`?
-¿`AGENT.md`? Un proyecto nuevo funciona el primer día sin darlo de alta, y uno
+¿`AGENTS.md` o el `AGENT.md` de un proyecto anterior? Un proyecto nuevo funciona
+el primer día sin darlo de alta, y uno
 viejo —CopyNotes mismo— funciona sin adaptarlo.
 
 **Nunca escribe por su cuenta.** Un `/cerrar` que escribiera memorias al cierre
@@ -352,7 +372,7 @@ identificado.
 El stack entra por **tres costuras y sólo tres**:
 
 1. `.claude/settings.json` — qué plugins se encienden y cuáles se apagan.
-2. `AGENT.md` › *Technical Direction* — el stack declarado en palabras.
+2. `AGENTS.md` › *Technical Direction* — el stack declarado en palabras.
 3. `.claude/skills/verify/` — cómo se prende y se compila esta app.
 
 Fuera de esas tres, el núcleo no nombra ninguna tecnología. Prueba mecánica, que
@@ -378,7 +398,8 @@ El paquete está listo cuando estos seis pasos pasan, corridos por una persona:
 5. `/cerrar` en el proyecto de prueba: dice que guía y changelog **todavía no
    aplican** porque el disparador no se cumplió, y **no escribe nada**.
 6. `/cerrar` adentro de **CopyNotes**: detecta `docs/guia/`, `CHANGELOG.md` y
-   `AGENT.md`, pregunta por los cuatro, y deja el `git status` limpio. Este es el
+   `AGENT.md` (el nombre anterior), pregunta por los cuatro, y deja el
+   `git status` limpio. Este es el
    único paso que prueba la detección contra un proyecto real y viejo.
 
 ## Plan de construcción
@@ -412,7 +433,7 @@ Las tajadas 1 y 2 se pueden usar a mano (copiando los dos `.md` a
 se queda donde está. Pero `instalar.sh` **lo lee y avisa una vez** si encuentra
 reglas de una tecnología ahí adentro: *"tenés reglas de Svelte en tu archivo
 global; se aplican a **todos** tus proyectos, sean o no de Svelte. Si querés,
-movelas al `AGENT.md` de cada uno."* Lee y avisa, no edita. Riesgo cero y
+movelas al `AGENTS.md` de cada uno."* Lee y avisa, no edita. Riesgo cero y
 resuelve el problema real, que es que hoy eso ya aplica a todo.
 
 **B · `.mcp.json` se versiona.** En CopyNotes está en `.gitignore` por una ruta
@@ -425,3 +446,24 @@ Versionarlo evita que un clon quede sin `codebase` sin que nadie avise, y
 **C · Esta spec y las futuras specs del propio `meto2` van en castellano**,
 porque su lector es Hernán. Las **plantillas** que el paquete reparte van en
 inglés, como manda la premisa 4. No es contradicción: son dos lectores distintos.
+
+
+**D · El método viaja en `AGENTS.md`; la cañería no viaja, y se dice.** Decidido
+el 2026-08-27 después de medirlo (ver *Las plantillas*). Lo que un agente
+cualquiera puede leer y usar hoy: `AGENTS.md`, `specs/`, `docs/guia/`,
+`CHANGELOG.md`, el flujo, las 8 meta-reglas y el generador de memoria — todo eso
+es markdown y Python.
+
+Lo que queda **fuera de alcance**, escrito para que la pregunta no vuelva cada
+tres meses:
+
+- `/arrancar` y `/cerrar` viven en `~/.claude/commands/`. No se portan. Pero los
+  dos son markdown legible: cualquier agente puede abrir el archivo y hacer lo
+  que dice, y eso alcanza. El README lo explica.
+- La memoria vive en una ruta de Claude Code (`~/.claude/projects/<slug>/`).
+- La lista de complementos apagados es de Claude Code.
+
+Escribir en los formatos de nueve agentes distintos —como hace el instalador de
+`codebase-memory-mcp`— se hace **el día que haya un segundo agente en uso de
+verdad**, no antes. Hasta entonces es mantenimiento de nueve archivos que nadie
+lee.

@@ -33,9 +33,12 @@ echo "=== /cerrar — $PROJ"
 echo "rango: $ETIQ"
 echo
 echo "--- QUÉ EXISTE EN ESTE PROYECTO (detectado, no configurado)"
-for f in AGENT.md CLAUDE.md CHANGELOG.md .mcp.json; do
+# AGENTS.md es el nombre nuevo; AGENT.md el que usan los proyectos anteriores.
+# Se detectan los dos: /cerrar mira lo que hay, no lo que deberia haber.
+for f in AGENTS.md AGENT.md CLAUDE.md CHANGELOG.md .mcp.json; do
   [ -e "$PROJ/$f" ] && echo "  sí   $f" || echo "  no   $f"
 done
+METODO="AGENTS.md"; [ -e "$PROJ/AGENTS.md" ] || METODO="AGENT.md"
 for d in specs docs/guia; do
   [ -d "$PROJ/$d" ] && echo "  sí   $d/" || echo "  no   $d/"
 done
@@ -55,7 +58,7 @@ if [ "$HAYGIT" = 1 ]; then
   echo "--- ¿ALGÚN COMMIT DEL RANGO TOCÓ LA GUÍA / EL CHANGELOG?"
   echo "  docs/guia/:   $(cuenta docs/guia) commit(s)"
   echo "  CHANGELOG.md: $(cuenta CHANGELOG.md) commit(s)"
-  echo "  AGENT.md:     $(cuenta AGENT.md) commit(s)"
+  echo "  $METODO:$(printf '%*s' $((13-${#METODO})) '')$(cuenta "$METODO") commit(s)"
   echo
   echo "--- ARCHIVOS TOCADOS EN EL RANGO (para juzgar qué ve el usuario)"
   { gl --name-only --pretty=format: ; git diff --name-only ; git diff --cached --name-only ; } \
@@ -109,7 +112,8 @@ empty box). For each one that is on:
   say which topic file it belongs in.
 - **Changelog** — same question against `CHANGELOG.md`. This is the one with a
   real expiry date: written at release time it is already too late.
-- **`AGENT.md`** — did anything break in a way that was expensive to find? If so,
+- **The method file** (`AGENTS.md`, or `AGENT.md` in an older project) — did
+  anything break in a way that was expensive to find? If so,
   it is a candidate for *Rules That Cost Us* — and only then. A preference is not
   a rule. Show what changed and let the person decide.
 - **Memory** — the generator's exit code. Non-zero names the incomplete file.

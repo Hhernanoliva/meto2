@@ -30,7 +30,7 @@ MEMDIR="$HOME/.claude/projects/$SLUG/memory"
 GEN="$REPO/memoria/generar-indice.py"
 
 CREADOS=""; INTACTOS=""
-for f in AGENT.md CLAUDE.md CHANGELOG.md specs/README.md docs/guia-de-uso.md \
+for f in AGENTS.md CLAUDE.md CHANGELOG.md specs/README.md docs/guia-de-uso.md \
          .claude/settings.json .claude/skills/verify/SKILL.md .mcp.json; do
   if [ -e "$PROJ/$f" ]; then
     INTACTOS="$INTACTOS  $f"
@@ -125,10 +125,14 @@ without jargon:
 1. **What was created** — the five method files, the four folders, the memory
    index. One line each, in terms of what it is *for*, not its path.
 2. **What was already there and was left untouched**, if anything. Name the files.
-3. **The next step**, which is always the same one: `AGENT.md` and `CLAUDE.md`
-   arrived as **questions, not answers**. The first real task is filling in
-   *Product Vision*, *Technical Direction* and the human language in `CLAUDE.md`.
-   Offer to do it now by asking about the project.
+3. **The next step**, which is always the same one: `AGENTS.md` arrived as
+   **questions, not answers**. The first real task is filling in *Product
+   Vision*, *Technical Direction* and *Human Language*. Offer to do it now by
+   asking about the project.
+
+Say plainly which file is which, because the split is the point: **`AGENTS.md` is
+the method** — every agent reads it, whichever tool it runs in — and **`CLAUDE.md`
+is only Claude Code's plumbing**, importing the other on its first line.
 
 Also mention, in one line each, only if true:
 - **What could not be turned off**, using the numbers the script printed: loose
