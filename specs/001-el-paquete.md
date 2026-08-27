@@ -1,30 +1,31 @@
 # 001 - meto2: el método, empaquetado para proyectos nuevos
 
-Escrita el 2026-08-27 sobre el brief acordado con Hernán ese mismo día (dos
+Escrita el 2026-08-27 sobre el brief acordado con su autor ese mismo día (dos
 rondas). **Todo lo que el brief dejó decidido entra acá como premisa y no se
 vuelve a discutir**; lo que estaba abierto se cierra en *Decisiones que esta
-spec toma* al final, marcado para que Hernán lo dé vuelta si quiere.
+spec toma* al final, marcado para poder darlo vuelta.
 
-> **Estado: construido, los 6 pasos del gate pasados.** Hernán corrió
+> **Estado: construido, los 6 pasos del gate pasados.** El autor corrió
 > `instalar.sh` el 2026-08-27: los dos comandos aparecen, `codebase-memory-mcp
 > 0.10.8` contesta, y el resumen imprimió las tres partes — incluida la de
 > *no pude*, que era real.
 
-## En criollo (resumen para Hernán)
+## En criollo (el resumen sin jerga)
 
-CopyNotes no salió bien por el código. Salió bien por **cómo se trabajó**: hay
+El proyecto donde nació este método no salió bien por el código. Salió bien por
+**cómo se trabajó**: hay
 un `AGENTS.md` que un agente lee antes de tocar nada, specs numeradas, una guía
 que se escribe en el mismo commit, un changelog con vencimiento real, y una
 memoria que se genera sola y grita cuando le falta algo.
 
-`meto2` es eso mismo **sin CopyNotes adentro**: las cajas vacías y las reglas de
+`meto2` es eso mismo **sin ese proyecto adentro**: las cajas vacías y las reglas de
 cómo se llenan. Se instala una vez por computadora, y después en cada proyecto
 nuevo escribís `/arrancar` y en dos segundos tenés el esqueleto entero. Al
 terminar una sesión escribís `/cerrar` y te dice qué quedó sin escribir — no lo
 escribe él, te avisa.
 
 Lo importante es lo que **no** lleva: ni Svelte, ni Tailwind, ni las 19 reglas de
-CopyNotes, ni las 89 memorias. Un proyecto nuevo arranca con la sección de reglas
+de allá, ni las 89 memorias. Un proyecto nuevo arranca con la sección de reglas
 **vacía**, y eso está bien: una regla sin la cicatriz que la produjo es
 superstición.
 
@@ -32,7 +33,7 @@ superstición.
 
 Que arrancar un proyecto nuevo con el método completo cueste **un comando**, y
 que el método viaje a otra computadora y a otra persona **sin arrastrar nada de
-CopyNotes, de Hernán, ni de esta máquina**.
+el proyecto de origen, de su autor, ni de esta máquina**.
 
 ## Non-goals
 
@@ -40,8 +41,8 @@ CopyNotes, de Hernán, ni de esta máquina**.
   explícitamente.
 - **No** es un plugin de Claude Code (ceremonia sin destinatario) ni un repo para
   clonar (choca cuando el proyecto arranca con un generador tipo `npx sv create`).
-- **No** toca CopyNotes. CopyNotes es la fuente: se lee, no se modifica.
-- **No** arregla las dos deudas que el brief destapó en CopyNotes (el `AGENT.md`
+- **No** toca el proyecto de origen. Es la fuente: se lee, no se modifica.
+- **No** arregla las dos deudas que el brief destapó allá (el `AGENT.md`
   de 97 KB y las reglas duplicadas entre `AGENT.md` y memoria). Trabajo aparte.
 - **No** porta los comandos, la memoria ni la lista de complementos a otros
   agentes. Ver la decisión **D**: el método viaja en `AGENTS.md`, la cañería no.
@@ -50,11 +51,11 @@ CopyNotes, de Hernán, ni de esta máquina**.
 
 | VIAJA (la forma) | NO VIAJA (el contenido) |
 |---|---|
-| Que exista una sección "reglas que costaron caro" | Las 19 reglas de CopyNotes |
+| Que exista una sección "reglas que costaron caro" | Las 19 reglas de aquel proyecto |
 | Que las specs estén numeradas y con índice | Las 49 specs |
 | Que la guía se escriba en el mismo commit | Los 23 temas |
 | El sistema de memoria entero (3 campos + generador) | Las 89 memorias |
-| La skill `verify` como idea: cómo se prende y maneja *esta* app | Los comandos `pnpm` de CopyNotes |
+| La skill `verify` como idea: cómo se prende y maneja *esta* app | Los comandos concretos de aquella app |
 
 Copiar contenido en vez de forma es el **riesgo N°1** del paquete y tiene una
 prueba mecánica, abajo en *La prueba del núcleo agnóstico*.
@@ -217,7 +218,7 @@ Secciones, todas presentes, todas con su pregunta adentro en vez de contenido:
   qué y cómo se escribe una regla nueva: *una regla entra acá cuando algo se
   rompió de verdad y costó encontrarlo; el título es la lección, no el bug*.
 - **Verification Rules** — las 8 meta-reglas de abajo. **Estas sí vienen
-  llenas**: no son de CopyNotes, son de trabajar con agentes.
+  llenas**: no son de aquel proyecto, son de trabajar con agentes.
 - **Quality Bar**.
 - **Where Detail Lives (topic → spec)** — la tabla, con encabezados y sin filas.
 
@@ -334,7 +335,7 @@ Comprobaciones concretas:
 **Detecta, no lee configuración**: ¿existe `docs/guia/`? ¿`CHANGELOG.md`?
 ¿`AGENTS.md` o el `AGENT.md` de un proyecto anterior? Un proyecto nuevo funciona
 el primer día sin darlo de alta, y uno
-viejo —CopyNotes mismo— funciona sin adaptarlo.
+viejo —el proyecto de origen mismo— funciona sin adaptarlo.
 
 **Nunca escribe por su cuenta.** Un `/cerrar` que escribiera memorias al cierre
 fabricaría en serie exactamente las 4 memorias vencidas que la dieta encontró.
@@ -351,7 +352,7 @@ recibiendo la carpeta de memoria como argumento. Copiar el script a cada proyect
 haría que un arreglo no llegue nunca a los viejos.
 
 Dos propiedades que hay que conservar si alguien lo toca — las dos ya probadas de
-verdad en CopyNotes, no razonadas:
+verdad en el proyecto de origen, no razonadas:
 
 1. **Falla hacia el lado seguro.** Sin `estado`, la memoria cae en `vigente`, o
    sea **entra al índice**. Nunca desaparece por un campo mal escrito: queda
@@ -381,7 +382,7 @@ Fuera de esas tres, el núcleo no nombra ninguna tecnología. Prueba mecánica, 
 corre en el gate:
 
 ```bash
-grep -riE 'svelte|tailwind|pnpm|dexie|copynotes|hernan|/Users/' plantillas/ comandos/ \
+grep -riE 'svelte|tailwind|react|vue|django|rails|pnpm|npm run|/Users/|/home/' plantillas/ comandos/ \
   | grep -v 'Technical Direction' | grep -v 'skills/verify' | grep -v 'settings.json'
 # debe dar CERO
 ```
@@ -394,12 +395,15 @@ El paquete está listo cuando estos seis pasos pasan, corridos por una persona:
    `codebase` contesta, y el resumen imprime las tres partes.
 2. `/arrancar` en una carpeta vacía nueva: aparecen los 5 archivos y las 4
    carpetas, `.mcp.json` apunta a esa carpeta, y `MEMORY.md` existe.
-3. El `grep` de arriba da cero.
+3. El `grep` de arriba da cero, y `python3 memoria/prueba.py` sale con 0. Esa
+   prueba cubre lo que se rompe en silencio —una memoria que desaparece del
+   índice, un recordatorio que pisa hooks ajenos— y se comprobó que no es hueca:
+   rompiendo cada control a propósito, falla en el renglón que lo nombra.
 4. Sacarle `estado` a una memoria: el generador la nombra y sale con código 1.
    Restaurada, vuelve a 0.
 5. `/cerrar` en el proyecto de prueba: dice que guía y changelog **todavía no
    aplican** porque el disparador no se cumplió, y **no escribe nada**.
-6. `/cerrar` adentro de **CopyNotes**: detecta `docs/guia/`, `CHANGELOG.md` y
+6. `/cerrar` adentro del **proyecto de origen**: detecta `docs/guia/`, `CHANGELOG.md` y
    `AGENT.md` (el nombre anterior), pregunta por los cuatro, y deja el
    `git status` limpio. Este es el
    único paso que prueba la detección contra un proyecto real y viejo.
@@ -418,7 +422,8 @@ Las tajadas 1 y 2 se pueden usar a mano (copiando los dos `.md` a
 
 ## Riesgos
 
-- **Culto al cargo** (el N°1): copiar contenido de CopyNotes en vez de forma. Lo
+- **Culto al cargo** (el N°1): copiar el contenido de aquel proyecto en vez de su
+  forma. Lo
   ataca el `grep` del gate y la sección de reglas vacía con su explicación.
 - **Escala**: el método se ganó su peso a lo largo de 49 specs. Un proyecto chico
   no debería ahogarse — por eso los disparadores, y por eso `/cerrar` pregunta en
@@ -431,14 +436,14 @@ Las tajadas 1 y 2 se pueden usar a mano (copiando los dos `.md` a
 
 ## Decisiones que esta spec toma (el brief las dejó abiertas)
 
-**A · El paquete NO toca el `~/.claude/CLAUDE.md` global de Hernán.** Es suyo y
+**A · El paquete NO toca el `~/.claude/CLAUDE.md` global del usuario.** Es del usuario y
 se queda donde está. Pero `instalar.sh` **lo lee y avisa una vez** si encuentra
 reglas de una tecnología ahí adentro: *"tenés reglas de Svelte en tu archivo
 global; se aplican a **todos** tus proyectos, sean o no de Svelte. Si querés,
 movelas al `AGENTS.md` de cada uno."* Lee y avisa, no edita. Riesgo cero y
 resuelve el problema real, que es que hoy eso ya aplica a todo.
 
-**B · `.mcp.json` se versiona.** En CopyNotes está en `.gitignore` por una ruta
+**B · `.mcp.json` se versiona.** En el proyecto de origen está en `.gitignore` por una ruta
 absoluta que existe sólo porque el binario se compiló a mano; con el instalador
 oficial el programa se llama **por nombre, sin ruta**. Lo único propio del
 proyecto queda siendo una línea, `CBM_ALLOWED_ROOT`, que escribe `/arrancar`.
@@ -446,7 +451,7 @@ Versionarlo evita que un clon quede sin `codebase` sin que nadie avise, y
 `/cerrar` comprueba que la ruta siga apuntando a la carpeta actual.
 
 **C · Esta spec y las futuras specs del propio `meto2` van en castellano**,
-porque su lector es Hernán. Las **plantillas** que el paquete reparte van en
+porque su lector es el autor. Las **plantillas** que el paquete reparte van en
 inglés, como manda la premisa 4. No es contradicción: son dos lectores distintos.
 
 
@@ -475,7 +480,7 @@ lee.
 Decidido el 2026-08-27.
 
 El problema medido: la regla *"explicame simple, no soy ingeniero"* ya existía en
-el `~/.claude/CLAUDE.md` de Hernán, se cargaba en cada sesión, **y fallaba igual**.
+el archivo global del usuario, se cargaba en cada sesión, **y fallaba igual**.
 Una regla que llega al arranque compite contra todo lo que llega después —las
 instrucciones de cada skill, la salida de cada herramienta— y es lo primero que la
 compresión de contexto poda.

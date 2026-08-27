@@ -17,11 +17,25 @@ que vengan después.
 
 ## Instalación
 
+### Paso 0 — traelo
+
+```bash
+git clone https://github.com/<usuario>/meto2.git ~/Projects/meto2
+```
+
+Necesitás **Claude Code** ya instalado, más `git`, `curl` y `python3`. Anda en
+Mac y en Linux; en Windows todavía no.
+
 ### Paso 1 — una vez por computadora
 
 ```bash
-bash instalar.sh
+bash ~/Projects/meto2/instalar.sh
 ```
+
+Ojo, y lo decimos acá porque conviene saberlo antes: este paso **baja software de
+internet que no es nuestro** —cuatro complementos de Claude Code y un programa de
+otra gente— y para uno de ellos usa el instalador oficial de ellos. Te dice qué y
+de dónde antes de bajar nada, y espera tu sí.
 
 Antes de bajar nada te dice **qué** va a bajar y **de dónde**, y espera el sí.
 Una sola vez, no paso por paso. Al final imprime tres partes, siempre las tres:
@@ -196,7 +210,7 @@ El stack entra por **tres costuras, y sólo tres**:
 Fuera de esas tres, nombrar una tecnología es un error. Hay una prueba mecánica:
 
 ```bash
-grep -riE 'svelte|tailwind|pnpm|dexie|copynotes|hernan|/Users/' plantillas/ comandos/ \
+grep -riE 'svelte|tailwind|react|vue|django|rails|pnpm|npm run|/Users/|/home/' plantillas/ comandos/ \
   | grep -v 'Technical Direction' | grep -v 'skills/verify' | grep -v 'settings.json'
 # tiene que dar CERO
 ```
@@ -248,3 +262,22 @@ memoria/             el generador del índice y el agregador de recordatorios
 plantillas/          las cajas vacías que /arrancar copia
 specs/               las decisiones de este paquete (en castellano)
 ```
+
+## Licencia
+
+MIT — hacé lo que quieras con esto, dejá el aviso de copyright. Ver `LICENSE`.
+
+## Si querés cambiarle algo
+
+Los dos programas de Python tienen prueba:
+
+```bash
+python3 memoria/prueba.py
+```
+
+Prueba lo que se rompe **en silencio**: que una memoria a la que le falta un campo
+no desaparezca del índice, y que el recordatorio no pise hooks ajenos ni se
+duplique. Comprobado que no es hueca — rompiendo cada una de esas dos cosas a
+propósito, la prueba falla en el renglón que las nombra.
+
+Y el gate a mano de 6 pasos está en `specs/001-el-paquete.md`.
