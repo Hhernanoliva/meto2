@@ -5,10 +5,17 @@ rondas). **Todo lo que el brief dejó decidido entra acá como premisa y no se
 vuelve a discutir**; lo que estaba abierto se cierra en *Decisiones que esta
 spec toma* al final, marcado para poder darlo vuelta.
 
-> **Estado: construido, los 6 pasos del gate pasados.** El autor corrió
-> `instalar.sh` el 2026-08-27: los dos comandos aparecen, `codebase-memory-mcp
-> 0.10.8` contesta, y el resumen imprimió las tres partes — incluida la de
-> *no pude*, que era real.
+> **Estado al 2026-08-27: construido y probado. Falta decidir si se publica.**
+>
+> Los 6 pasos del gate pasados, más un gate a mano corrido por una persona en
+> un proyecto de verdad, que encontró 3 defectos que las pruebas no veían (ver
+> *Lo que encontró el gate a mano*). Licencia MIT, anonimizado, con prueba
+> propia. **Nunca se probó en Linux**, y el README está sólo en castellano.
+>
+> **Publicarlo enciende dos disparadores de golpe**: pasa a haber un usuario que
+> no es el autor (⇒ la guía se activa) y una versión distribuible (⇒ el
+> changelog se activa). Eso lo detectó el propio `/cerrar` corriendo sobre este
+> repo. No publicar sin resolverlo.
 
 ## En criollo (el resumen sin jerga)
 
