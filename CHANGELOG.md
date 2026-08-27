@@ -46,6 +46,13 @@ implementa**, no al publicar.
   que no existe.** Decía `AGENT.md` cuando el archivo del método es `AGENTS.md`.
   Los archivos se creaban perfectos y todas las pruebas pasaban: lo que estaba
   mal era una frase, y un agente la iba a repetir tal cual
+- **Las plantillas ya no le imponen el castellano a tu proyecto.** El `CHANGELOG`
+  y la guía que `/arrancar` deja llegaban con el andamiaje escrito en
+  rioplatense; las otras cuatro plantillas venían en inglés. Ahora llegan las
+  seis en inglés, y cada una te dice adentro que **lo que escribas** vaya en el
+  idioma que declaraste, no en el de ellas. La diferencia importa: el andamiaje
+  lo lee un agente, las viñetas las lee un usuario que no tiene a nadie al lado
+  para traducirle
 - **El instalador ya no se queda mudo mientras baja los complementos.** Antes la
   pantalla quedaba en blanco medio minuto y lo razonable era pensar que se
   habia colgado. Ahora va diciendo `[2/4] bajando ponytail...`. Es un contador y

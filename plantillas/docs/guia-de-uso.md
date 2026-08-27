@@ -1,16 +1,18 @@
-# Guía de uso / User Guide
+# User Guide
 
-Todo lo que se puede hacer en esta app hoy, organizado por tema en `docs/guia/`.
-Cada archivo se actualiza cuando cambia su tema.
-*(Escribir esta guía en el idioma humano del proyecto, declarado en `AGENTS.md`.)*
+Everything this app can do today, one file per topic in `docs/guia/`. Each file
+is updated when its topic changes.
+*(Write this guide — this title included — in the project's human language, the
+one declared in `AGENTS.md` › Human Language. Its readers are users, and there
+is no agent in the loop to translate it for them.)*
 
-Última actualización: —
+Last updated: —
 
-> **Todavía no aplica.** No hay todavía un usuario que no seas vos: ése es el
-> disparador, y está escrito en `AGENTS.md` › *The User Guide Rule*. La carpeta
-> `docs/guia/` existe vacía
-> a propósito — cuando haya alguien más usando esto, ya hay dónde escribir.
+> **Not active yet.** There is no user who is not you: that is the trigger, and
+> it is written down in `AGENTS.md` › *The User Guide Rule*. The `docs/guia/`
+> folder exists empty on purpose — when somebody else is using this, there is
+> already somewhere to write.
 
-## Temas
+## Topics
 
-*(un renglón por tema, con enlace a su archivo en `docs/guia/`)*
+*(one line per topic, linking to its file in `docs/guia/`)*

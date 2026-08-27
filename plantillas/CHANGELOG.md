@@ -1,17 +1,19 @@
-# Novedades / What's New
+# What's New
 
-Lo que cambia en cada versión, contado para quien la usa.
-*(Escribir este archivo en el idioma humano del proyecto, declarado en `AGENTS.md`.)*
+What changed in each version, told for the person who uses it.
+*(Write this file — this title included — in the project's human language, the
+one declared in `AGENTS.md` › Human Language. Its readers are users, and there
+is no agent in the loop to translate it for them.)*
 
-Reglas: una sección `## X.Y.Z` por versión, la más nueva arriba, una viñeta por
-cambio, sin jerga técnica. Se escribe **en el mismo commit que la
-funcionalidad**, no al publicar.
+Rules: one `## X.Y.Z` section per version, newest on top, one bullet per change,
+no technical jargon. Written **in the same commit as the change**, not at release
+time.
 
-> **Todavía no aplica.** No hay una primera versión distribuible: ése es el
-> disparador, y está escrito en `AGENTS.md` › *The Changelog Rule*. El archivo
-> existe vacío a propósito
-> — cuando el disparador se cumpla, ya hay dónde escribir.
+> **Not active yet.** There is no first distributable version: that is the
+> trigger, and it is written down in `AGENTS.md` › *The Changelog Rule*. The file
+> exists empty on purpose — when the trigger is met, there is already somewhere
+> to write.
 
-## 0.1.0 (sin publicar)
+## 0.1.0 (unreleased)
 
 -
