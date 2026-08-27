@@ -1,0 +1,195 @@
+# meto2 — el método, empaquetado
+
+Esto no es una app ni una librería. Es **la forma de trabajar** con la que se
+construyó un proyecto que salió bien, guardada en cajas vacías para poder
+arrancar otro proyecto con ella desde el día uno.
+
+Lo que hace, en una línea: **`/arrancar` te deja el esqueleto entero del método
+en cualquier carpeta, y `/cerrar` te dice al final del día qué quedó sin
+escribir** — no lo escribe él, te avisa.
+
+Lo que **no** lleva, a propósito: ninguna tecnología, ninguna regla heredada de
+otro proyecto, ninguna memoria vieja. Las cajas vienen vacías porque **una regla
+sin la cicatriz que la produjo es superstición**, y le cuesta contexto a todos los
+que vengan después.
+
+---
+
+## Instalación
+
+### Paso 1 — una vez por computadora
+
+```bash
+bash instalar.sh
+```
+
+Antes de bajar nada te dice **qué** va a bajar y **de dónde**, y espera el sí.
+Una sola vez, no paso por paso. Al final imprime tres partes, siempre las tres:
+
+```
+✅ Instalado:   ...
+⚠️  No pude:    ... y por qué
+👉 Te toca:     ... con el comando exacto para copiar y pegar
+```
+
+Los dos comandos quedan como **enlaces** al repo, no como copias: si mañana los
+mejorás acá, el cambio ya está activo en todos tus proyectos.
+
+### Paso 2 — una vez por proyecto
+
+Entrá con Claude Code a la carpeta del proyecto y escribí:
+
+```
+/arrancar
+```
+
+No hace `git init` ni instala dependencias: el proyecto ya existe, esto le agrega
+el método encima. Correrlo dos veces no rompe nada — lo que ya existe no se pisa,
+se nombra.
+
+---
+
+## Tu primer proyecto, en tres pasos
+
+1. **`/arrancar`.** Aparecen cinco archivos y cuatro carpetas. Todos los archivos
+   están llenos de **preguntas, no de respuestas**. Eso es correcto.
+2. **Contestá `AGENT.md` y `CLAUDE.md`.** Qué es esto y para quién, con qué está
+   hecho, y en qué idioma se le habla a la persona. Diez minutos. Es lo único que
+   hay que hacer a mano, y es lo que hace que ningún agente vuelva a preguntarlo.
+3. **Trabajá.** Al final del día, `/cerrar`.
+
+---
+
+## Qué crea `/arrancar`
+
+| archivo | para qué |
+|---|---|
+| `AGENT.md` | lo que un agente tiene que saber **siempre**, antes de tocar nada |
+| `CLAUDE.md` | las reglas de este proyecto y los punteros al resto |
+| `specs/README.md` | el índice de las decisiones tomadas antes de programar |
+| `docs/guia-de-uso.md` | el índice de la guía para quien usa la app |
+| `CHANGELOG.md` | qué cambió en cada versión, contado para quien la usa |
+
+Más cuatro carpetas (`specs/`, `docs/guia/`, `docs/superpowers/`, `.claude/`), el
+`.mcp.json` apuntando a esta carpeta, la skill `verify` en blanco con sus
+preguntas, y la memoria del proyecto arrancada.
+
+### Los tres disparadores
+
+El esqueleto está entero desde el día uno, pero **cada regla dice por escrito qué
+la enciende**. Hasta entonces la caja está vacía y lo dice, para que nadie la lea
+como un olvido:
+
+| regla | se enciende cuando |
+|---|---|
+| la guía se escribe en el mismo commit | hay un usuario que **no sos vos** |
+| la viñeta del changelog, en el mismo commit | hay una **primera versión distribuible** |
+| la spec antes de construir | la primera cosa que necesita **decisiones antes de código** |
+
+---
+
+## Qué hace `/cerrar`
+
+Dos mitades:
+
+```
+lo que YA está activo   → ¿está hecho?   (guía, changelog, AGENT.md, memoria)
+lo que TODAVÍA NO       → ¿ya se cumplió el disparador? ¿lo encendemos?
+```
+
+**La segunda mitad es el punto entero.** La parte que falta del método no depende
+de que alguien se acuerde: se pregunta sola en cada cierre.
+
+Y **nunca escribe por su cuenta**. Comprueba, avisa y ofrece. Un cierre que
+escribiera memorias solo las fabricaría justo en el momento de menos contexto
+disponible — que es exactamente cuando salen mal y encima parecen ciertas.
+
+También **detecta en vez de leer configuración**: mira si existen `docs/guia/`,
+`CHANGELOG.md` y `AGENT.md`. Por eso funciona igual en un proyecto de hoy y en uno
+anterior a que este método existiera.
+
+---
+
+## La memoria
+
+Un hecho por archivo, con una cabecera. Cuatro campos y una regla:
+
+- `titulo:` — el nombre que aparece en el índice.
+- `estado:` — `abierto` (alguien tiene que hacer algo) · `vigente` (no leerlo hace
+  que un agente se equivoque) · `archivado` (no leerlo sólo cuesta contexto).
+- `verificado:` — `humano` · `medido` (se corrió algo y la salida está citada
+  adentro) · `no` (lo dijo un agente, nadie comprobó).
+- `type:` — `user` · `feedback` · `project` · `reference`.
+
+Y la regla: **el `description:` es la única línea de ruteo.** Contesta "¿abro este
+archivo o no?". Nada más. Lo de adentro no se resume ahí.
+
+`MEMORY.md` y `ARCHIVO.md` **se generan, no se editan a mano**:
+
+```bash
+python3 memoria/generar-indice.py ~/.claude/projects/<tu-proyecto>/memory
+```
+
+Hay **una sola copia** del generador, ésta, para todos los proyectos. Copiarla a
+cada uno haría que un arreglo no llegue nunca a los viejos.
+
+Dos propiedades suyas que no hay que romper, las dos probadas de verdad:
+
+1. **Falla hacia el lado seguro.** Sin `estado`, la memoria cae en `vigente`, o
+   sea que **entra al índice**. Nunca desaparece por un campo mal escrito.
+2. **Sale con código 1** cuando falta un campo, y nombra el archivo. Así `/cerrar`
+   se entera sin que nadie lea la salida.
+
+El riesgo real no es que algo pise una cabecera. Es que dentro de dos meses un
+agente edite una memoria y borre los tres campos **porque no sabe que existen**.
+Una regla escrita no lo evita; una comprobación ruidosa sí.
+
+### Parentesco con OKF
+
+Este formato es primo hermano del **Open Knowledge Format**. Las diferencias son
+exactamente dos: acá `type` va **adentro de `metadata:`** (así lo guarda Claude
+Code) en vez de suelto en la raíz, y los enlaces entre memorias son `[[dobles
+corchetes]]` en vez de enlaces markdown. Si algún día conviene converger, el
+cambio ya está identificado y es chico.
+
+---
+
+## El núcleo no nombra ninguna tecnología
+
+El stack entra por **tres costuras, y sólo tres**:
+
+1. `.claude/settings.json` — qué herramientas se encienden y cuáles son ruido.
+2. `AGENT.md` › *Technical Direction* — el stack declarado en palabras.
+3. `.claude/skills/verify/` — cómo se prende, se compila y se maneja esta app.
+
+Fuera de esas tres, nombrar una tecnología es un error. Hay una prueba mecánica:
+
+```bash
+grep -riE 'svelte|tailwind|pnpm|dexie|copynotes|hernan|/Users/' plantillas/ comandos/ \
+  | grep -v 'Technical Direction' | grep -v 'skills/verify' | grep -v 'settings.json'
+# tiene que dar CERO
+```
+
+---
+
+## Dos idiomas, a propósito
+
+Lo que lee **una máquina** (`AGENT.md`, `CLAUDE.md`, las specs, las skills, los
+comandos) va en **inglés**. Lo que lee **una persona** (`docs/guia/`,
+`CHANGELOG.md`, este README, la conversación) va en **el idioma del usuario**,
+declarado en `CLAUDE.md` de cada proyecto. Declarado, nunca supuesto.
+
+Los comandos se llaman `/arrancar` y `/cerrar` en castellano. Si algún día esto
+viaja de verdad, se les agregan alias en inglés y no se rompe nada.
+
+---
+
+## Qué hay adentro de este repo
+
+```
+instalar.sh          paso 1: una vez por computadora
+comandos/            /arrancar y /cerrar (se enlazan a ~/.claude/commands/)
+memoria/             el generador del índice, una sola copia para todos
+plantillas/          las cajas vacías que /arrancar copia
+specs/               las decisiones de este paquete (en castellano)
+```

@@ -5,9 +5,9 @@ rondas). **Todo lo que el brief dejó decidido entra acá como premisa y no se
 vuelve a discutir**; lo que estaba abierto se cierra en *Decisiones que esta
 spec toma* al final, marcado para que Hernán lo dé vuelta si quiere.
 
-> **Estado: en construcción.** Tajada 1 lista (plantillas, `/arrancar`,
-> generador con argumento; pasos 2, 3 y 4 del gate verificados a mano). Faltan
-> las tajadas 2, 3 y 4.
+> **Estado: las 4 tajadas escritas.** Del gate a mano quedan verificados los
+> pasos 2, 3, 4, 5 y 6. **Falta el paso 1**: correr `bash instalar.sh` de verdad
+> — baja software, así que lo corre Hernán.
 
 ## En criollo (resumen para Hernán)
 
