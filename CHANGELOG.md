@@ -42,3 +42,8 @@ implementa**, no al publicar.
   pregunta antes de bajar nada, diciendo qué baja y de dónde. Termina siempre con
   tres partes: qué instaló, qué no pudo **y por qué**, y qué te toca a vos con el
   comando exacto para copiar
+- **El instalador te avisa que hay que salir y volver a entrar a Claude Code.**
+  La lista de comandos la lee una sola vez, al abrir la sesión: sin ese aviso
+  escribís `/arrancar`, no aparece, y lo lógico es concluir que la instalación
+  falló. Si corriste el instalador desde adentro de Claude Code lo sabe con
+  certeza y te lo dice como una orden; si no, te lo dice por las dudas

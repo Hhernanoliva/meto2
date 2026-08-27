@@ -182,8 +182,31 @@ cat <<TXT
 TXT
 [ -n "$NOPUDE" ] && printf '\n⚠️  No pude:%s\n' "$NOPUDE"
 [ -n "$TETOCA" ] && printf '\n👉 Te toca:%s\n' "$TETOCA"
+printf '%s\n' "────────────────────────────────────────────────────────────"
+
+# Claude Code lee su lista de comandos UNA sola vez, al abrir la sesion. Los
+# enlaces recien creados no existen para una sesion que ya estaba abierta:
+# /arrancar no aparece y la conclusion obvia del usuario es que esto fallo.
+# CLAUDECODE=1 lo setea Claude Code cuando el comando corre desde adentro
+# (medido 2026-08-27: 'echo $CLAUDECODE' devuelve 1). Ahi la certeza es total y
+# el aviso deja de ser condicional.
+if [ -n "${CLAUDECODE:-}" ]; then
+  cat <<TXT
+
+⚠️  Estás corriendo esto desde adentro de Claude Code, y esta sesión NO ve los
+comandos nuevos: la lista la leyó al abrirse. Cerrala y volvé a entrar, y recién
+ahí /arrancar te va a aparecer. Si no aparece, entonces sí falló algo.
+TXT
+else
+  cat <<TXT
+
+Si tenías Claude Code abierto mientras corría esto, cerralo y volvé a entrar: la
+lista de comandos la lee al empezar la sesión, así que hasta entonces /arrancar
+no le figura.
+TXT
+fi
+
 cat <<TXT
-────────────────────────────────────────────────────────────
 
 Cómo se usa: entrá con Claude Code a la carpeta de un proyecto y escribí
 /arrancar. Al terminar una sesión de trabajo, /cerrar.
