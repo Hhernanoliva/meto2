@@ -81,16 +81,29 @@ for c in arrancar cerrar simple; do
 done
 
 # ------------------------------------------------------------- 4. los plugins
+# Esta es la parte lenta y hasta ahora era la parte muda: la pantalla quedaba en
+# blanco y lo razonable era pensar que se habia colgado.
+#
+# Se muestra "X de Y" y NO un spinner, a proposito. Un spinner gira igual de
+# contento cuando todo anda y cuando nada anda; el numero, si algo se traba, se
+# queda quieto y eso SE VE. Es la misma idea que "un codigo de salida 0 es una
+# afirmacion, no un resultado", aplicada a lo que mira el usuario.
+PLUG_TOTAL=4   # tiene que coincidir con las llamadas a instalar_plugin de abajo
+PLUG_N=0
 if command -v claude >/dev/null 2>&1; then
   # 'claude plugin install' devuelve 0 aunque falle (medido: un nombre que no
   # existe en el mercado sale 0 e imprime el error). El unico chequeo que sirve
   # es preguntarle despues a 'claude plugin list' si el complemento esta.
   instalar_plugin() { # nombre_visible  plugin@mercado  repo-de-github
+    PLUG_N=$((PLUG_N+1))
+    printf '  [%d/%d] bajando %s…\n' "$PLUG_N" "$PLUG_TOTAL" "$1"
     claude plugin marketplace add "$3" >/dev/null 2>&1
     claude plugin install "$2" -y >/dev/null 2>&1
     if claude plugin list 2>/dev/null | grep -q "$2"; then
+      printf '  ✅      %s instalado\n' "$1"
       ok "complemento $1 instalado"
     else
+      printf '  ⚠️       %s no se pudo\n' "$1"
       nopude "no pude instalar el complemento $1"
       tetoca "Instalalo a mano:  claude plugin install $2"
     fi
@@ -99,8 +112,13 @@ if command -v claude >/dev/null 2>&1; then
   instalar_plugin ponytail    "ponytail@ponytail"                   "DietrichGebert/ponytail"
   instalar_plugin caveman     "caveman@caveman"                     "JuliusBrussee/caveman"
   instalar_plugin context7    "context7@context7-marketplace"        "upstash/context7"
+  # Una regla escrita no evita nada; una comprobacion ruidosa si. Si alguien
+  # agrega un quinto complemento y se olvida del contador, el cierre lo canta.
+  if [ "$PLUG_N" != "$PLUG_TOTAL" ]; then
+    nopude "aviso para quien edite instalar.sh: PLUG_TOTAL dice $PLUG_TOTAL y se intentaron $PLUG_N"
+  fi
 else
-  nopude "no encontré el programa 'claude' en la terminal, así que no pude instalar los 4 complementos"
+  nopude "no encontré el programa 'claude' en la terminal, así que no pude instalar los $PLUG_TOTAL complementos"
   tetoca "Abrí Claude Code, corré /doctor para que instale su comando de terminal, y volvé a correr este instalador."
 fi
 
@@ -134,18 +152,20 @@ HOOKTXT="Before answering: re-read who you are writing for in ~/.claude/CLAUDE.m
 if [ "$SI" != "si" ]; then
   cat <<TXT
 
-Una cosa más, opcional, y toca TU configuración (no baja nada).
+Una cosa más, opcional. No baja nada: cambia un archivo de configuración tuyo.
 
-Cada proyecto que armes con /arrancar ya se va a acordar solo de para quién
-escribir. Fuera de esos proyectos, no.
+El problema que arregla: en una carpeta cualquiera, Claude te explica las cosas
+como si fueras programador. En los proyectos que armes con /arrancar eso ya
+queda resuelto; afuera de ellos, no.
 
-Puedo agregar un recordatorio que se dispare con cada mensaje que mandes, en
-cualquier carpeta. No lleva tu descripción adentro: sólo dice "andá a leer quién
-es esta persona en $GLOBAL". Lo que decís de vos lo escribís
-ahí, y lo cambiás cuando quieras sin tocar nada más.
+Lo que hace, y es una sola cosa: antes de contestarte, Claude pasa por tu
+archivo $GLOBAL y lee cómo querés que te hablen.
+Eso lo escribís vos y lo cambiás cuando quieras.
 
-Para sacarlo después: borrás el bloque "UserPromptSubmit" de
-$HOME/.claude/settings.json
+Acá no queda guardada ninguna copia de lo que digas de vos — sólo la dirección
+donde está. Por eso no se desactualiza nunca.
+
+Para sacarlo mañana, pedile a Claude: "sacame el recordatorio que puso meto2".
 
 TXT
   printf "¿Lo agrego? [s/N] "
@@ -218,6 +238,6 @@ if [ -n "$AVISO" ]; then
 Una cosa más, y no la toqué: tu archivo $GLOBAL
 tiene reglas de tecnología ($AVISO). Ése archivo se aplica a
 TODOS tus proyectos, sean o no de esa tecnología. Si querés, mové esas reglas
-al AGENT.md de cada proyecto que sí las use. Yo no lo edito: es tuyo.
+al AGENTS.md de cada proyecto que sí las use. Yo no lo edito: es tuyo.
 TXT
 fi

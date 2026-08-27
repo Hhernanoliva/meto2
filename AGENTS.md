@@ -120,6 +120,17 @@ saw an error message the author never could.
 The trap: the command is correct, the redirection is correct, and the failure
 depends only on which shell reads it. Use `find` for patterns that may not match.
 
+**It cuts both ways, and the other direction is worse.** Measured 2026-08-27:
+macOS still ships bash 3.2.57 as `bash`, which is what the README tells people to
+run the installer with. There, appending a multibyte literal to an expanded
+variable — `b="$b━"`, the obvious way to build a progress bar — silently
+produces two garbage bytes instead of the character. Forcing a UTF-8 locale does
+not help. What does work, measured the same day: `b+="━"`, a repeated
+`printf '━'`, and the whole string written as one literal. So the rule is not
+"avoid unicode" — it is **do not grow a multibyte string by appending to a
+variable in a loop**, because the shell that breaks it is the default one on the
+machine you are shipping to.
+
 This is meta-rule 1 — *measure the environment* — aimed at whoever is testing,
 not at whoever is failing.
 

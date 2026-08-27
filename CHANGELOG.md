@@ -46,6 +46,16 @@ implementa**, no al publicar.
   que no existe.** Decía `AGENT.md` cuando el archivo del método es `AGENTS.md`.
   Los archivos se creaban perfectos y todas las pruebas pasaban: lo que estaba
   mal era una frase, y un agente la iba a repetir tal cual
+- **El instalador ya no se queda mudo mientras baja los complementos.** Antes la
+  pantalla quedaba en blanco medio minuto y lo razonable era pensar que se
+  habia colgado. Ahora va diciendo `[2/4] bajando ponytail...`. Es un contador y
+  no una ruedita girando a proposito: si algo se traba, el numero se queda
+  quieto y lo ves — una ruedita gira igual de contenta cuando nada funciona
+- **La segunda pregunta del instalador se entiende.** La que pide permiso para
+  tocar tu configuracion. Antes arrancaba explicando el mecanismo; ahora arranca
+  por el problema que arregla —en una carpeta cualquiera Claude te habla como si
+  fueras programador— y para deshacerlo ya no hay que buscar un bloque dentro de
+  un archivo de configuracion: se lo pedis a Claude en castellano
 - **El instalador te avisa que hay que salir y volver a entrar a Claude Code.**
   La lista de comandos la lee una sola vez, al abrir la sesión: sin ese aviso
   escribís `/arrancar`, no aparece, y lo lógico es concluir que la instalación
