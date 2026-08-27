@@ -1,0 +1,401 @@
+# 001 - meto2: el método, empaquetado para proyectos nuevos
+
+Escrita el 2026-08-27 sobre el brief acordado con Hernán ese mismo día (dos
+rondas). **Todo lo que el brief dejó decidido entra acá como premisa y no se
+vuelve a discutir**; lo que estaba abierto se cierra en *Decisiones que esta
+spec toma* al final, marcado para que Hernán lo dé vuelta si quiere.
+
+> **Estado: escrita, sin construir.** Cero código. El repo `~/Projects/meto2`
+> existe con esta spec adentro y nada más.
+
+## En criollo (resumen para Hernán)
+
+CopyNotes no salió bien por el código. Salió bien por **cómo se trabajó**: hay
+un `AGENT.md` que un agente lee antes de tocar nada, specs numeradas, una guía
+que se escribe en el mismo commit, un changelog con vencimiento real, y una
+memoria que se genera sola y grita cuando le falta algo.
+
+`meto2` es eso mismo **sin CopyNotes adentro**: las cajas vacías y las reglas de
+cómo se llenan. Se instala una vez por computadora, y después en cada proyecto
+nuevo escribís `/arrancar` y en dos segundos tenés el esqueleto entero. Al
+terminar una sesión escribís `/cerrar` y te dice qué quedó sin escribir — no lo
+escribe él, te avisa.
+
+Lo importante es lo que **no** lleva: ni Svelte, ni Tailwind, ni las 19 reglas de
+CopyNotes, ni las 89 memorias. Un proyecto nuevo arranca con la sección de reglas
+**vacía**, y eso está bien: una regla sin la cicatriz que la produjo es
+superstición.
+
+## Objective
+
+Que arrancar un proyecto nuevo con el método completo cueste **un comando**, y
+que el método viaje a otra computadora y a otra persona **sin arrastrar nada de
+CopyNotes, de Hernán, ni de esta máquina**.
+
+## Non-goals
+
+- **No** porta el método a los 10 proyectos que ya existen en la Mac. Descartado
+  explícitamente.
+- **No** es un plugin de Claude Code (ceremonia sin destinatario) ni un repo para
+  clonar (choca cuando el proyecto arranca con un generador tipo `npx sv create`).
+- **No** toca CopyNotes. CopyNotes es la fuente: se lee, no se modifica.
+- **No** arregla las dos deudas que el brief destapó en CopyNotes (el `AGENT.md`
+  de 97 KB y las reglas duplicadas entre `AGENT.md` y memoria). Trabajo aparte.
+
+## La distinción que decide todo: forma vs contenido
+
+| VIAJA (la forma) | NO VIAJA (el contenido) |
+|---|---|
+| Que exista una sección "reglas que costaron caro" | Las 19 reglas de CopyNotes |
+| Que las specs estén numeradas y con índice | Las 49 specs |
+| Que la guía se escriba en el mismo commit | Los 23 temas |
+| El sistema de memoria entero (3 campos + generador) | Las 89 memorias |
+| La skill `verify` como idea: cómo se prende y maneja *esta* app | Los comandos `pnpm` de CopyNotes |
+
+Copiar contenido en vez de forma es el **riesgo N°1** del paquete y tiene una
+prueba mecánica, abajo en *La prueba del núcleo agnóstico*.
+
+## Premisas ya decididas (brief del 2026-08-27)
+
+1. **Forma:** carpeta propia con git (`~/Projects/meto2`), dos enlaces simbólicos
+   hacia `~/.claude/commands/`.
+2. **Alcance:** esqueleto **completo** el día 1 (5 archivos, 4 carpetas). Lo que
+   crece son las reglas, no las carpetas. Nada de "una segunda parte que se
+   activa después": sin disparador, nunca se activa.
+3. **El núcleo es agnóstico del stack.** No trae capa de SvelteKit ni de ninguna
+   otra: traer una capa lista ya es decirle al que llega cuál es el stack bendecido.
+4. **Idioma en dos capas:** lo que lee la máquina (`AGENT.md`, `CLAUDE.md`,
+   skills, comandos, specs) en **inglés**; lo que lee la persona (`docs/guia/`,
+   `CHANGELOG.md`, el tutorial, la conversación) en **el idioma del usuario**,
+   declarado en `CLAUDE.md`, nunca supuesto.
+5. **El instalador instala todo**, y le explica al usuario qué instaló, qué no
+   pudo y por qué, y qué le toca a él con el comando exacto para copiar.
+6. **OKF** no recibe más lugar que un párrafo explicando el parentesco.
+7. **Nombre del repo:** `meto2`. Comandos: `/arrancar` y `/cerrar`.
+
+## Estructura del repo `meto2`
+
+```
+meto2/
+  README.md                          # qué es y cómo se instala (idioma del usuario)
+  instalar.sh                        # paso 1: una vez por computadora
+  comandos/
+    arrancar.md                      # → ~/.claude/commands/arrancar.md
+    cerrar.md                        # → ~/.claude/commands/cerrar.md
+  memoria/
+    generar-indice.py                # el generador, UNA copia para todos los proyectos
+  plantillas/
+    AGENT.md
+    CLAUDE.md
+    CHANGELOG.md
+    specs/README.md
+    docs/guia-de-uso.md
+    .claude/settings.json
+    .claude/skills/verify/SKILL.md
+    .mcp.json
+  specs/
+    README.md
+    001-el-paquete.md                # esta spec
+```
+
+Los comandos van por **enlace simbólico**, no por copia: se edita el repo y el
+cambio ya está activo en todos los proyectos.
+
+## Instalación en dos pasos
+
+### Paso 1 — por computadora: `bash instalar.sh`
+
+1. Enlaza `comandos/arrancar.md` y `comandos/cerrar.md` a `~/.claude/commands/`.
+2. Deja `memoria/generar-indice.py` accesible (queda en el repo; los comandos lo
+   llaman por su ruta, resuelta desde el enlace simbólico).
+3. Instala los plugins del núcleo: **superpowers**, **ponytail**, **caveman**,
+   **context7**.
+4. Instala `codebase-memory-mcp` **llamando al instalador oficial de ellos**
+   (`install.sh` / `install.ps1` de `github.com/DeusData/codebase-memory-mcp`,
+   o la fórmula de Homebrew). Nunca copiar el binario: pesa 282 MB y es
+   específico de la máquina.
+5. Imprime el resumen.
+
+**Antes de bajar nada, una sola pregunta.** El instalador va a traer software de
+internet que no es nuestro. Dice **qué** va a bajar y **de dónde**, y espera el
+sí. Una vez, al principio — no paso por paso.
+
+**Comprobaciones previas, antes de empezar** (fallar por la mitad no es una
+opción): que existan `git` y `curl`, que el sistema esté soportado, y que
+`~/.claude/` exista. Si falta algo, lo dice y no arranca.
+
+**El resumen final** tiene tres partes y siempre las tres, en el idioma del
+usuario y sin jerga:
+
+```
+✅ Instalado:   ...
+⚠️  No pude:    ... y POR QUÉ
+👉 Te toca:     ... con el comando exacto para copiar y pegar
+```
+
+Nunca *"falló el paso 3"*. Siempre *"no encontré `git`; instalalo así y volvé a
+correr"*.
+
+### Paso 2 — por proyecto: `/arrancar` adentro de la carpeta
+
+Crea **5 archivos**:
+
+| archivo | qué es |
+|---|---|
+| `AGENT.md` | lo que un agente debe saber siempre |
+| `CLAUDE.md` | las reglas del proyecto y los punteros |
+| `specs/README.md` | el índice de specs |
+| `docs/guia-de-uso.md` | el índice de la guía |
+| `CHANGELOG.md` | la versión en curso |
+
+y **4 carpetas**: `specs/`, `docs/guia/`, `docs/superpowers/` (con `specs/` y
+`plans/` adentro) y `.claude/`.
+
+Además:
+
+- Genera `.mcp.json` con `CBM_ALLOWED_ROOT` apuntando a **esta** carpeta.
+- Escribe `.claude/settings.json` con la lista de plugins apagados vacía y el
+  comentario de para qué sirve.
+- Escribe `.claude/skills/verify/SKILL.md` **en blanco, con sus preguntas**.
+- Inicia la memoria: crea `~/.claude/projects/<slug>/memory/` y corre el
+  generador para que `MEMORY.md` exista desde el primer día. El `<slug>` se
+  calcula desde la ruta absoluta del proyecto, no se configura.
+- **Al final dice qué creó y cuál es el próximo paso.**
+
+`/arrancar` **no** hace `git init` ni instala dependencias: el proyecto ya
+existe, esto le agrega el método encima.
+
+Correrlo dos veces no rompe nada: lo que ya existe no se pisa, se nombra
+(*"ya tenías `AGENT.md`, lo dejé como estaba"*).
+
+## Las plantillas
+
+### `AGENT.md` (inglés)
+
+Secciones, todas presentes, todas con su pregunta adentro en vez de contenido:
+
+- **Product Vision** — qué es y para quién.
+- **Collaboration Style** — cómo se explica y en qué idioma se habla.
+- **Product Principles**.
+- **Technical Direction** — ⬅ *costura de stack N°2*: el único lugar del núcleo
+  donde se nombra una tecnología, y arranca vacío.
+- **Application Architecture**.
+- **Rules That Cost Us** — **vacía a propósito**, con el texto que explica por
+  qué y cómo se escribe una regla nueva: *una regla entra acá cuando algo se
+  rompió de verdad y costó encontrarlo; el título es la lección, no el bug*.
+- **Verification Rules** — las 8 meta-reglas de abajo. **Estas sí vienen
+  llenas**: no son de CopyNotes, son de trabajar con agentes.
+- **Quality Bar**.
+- **Where Detail Lives (topic → spec)** — la tabla, con encabezados y sin filas.
+
+### Las 8 meta-reglas que sí viajan (van en la plantilla, en inglés)
+
+1. **A massive red is almost never the code.** Measure the environment before
+   reading the diff: ports, stale servers, reused state.
+2. **A green can be a file nobody ran.** Check that the runner's output *names*
+   the file.
+3. **A red is a claim, not a verdict.** Run the same command against the baseline
+   and compare rates. One failure alone proves nothing.
+4. **How long it took to fail names its cause.** Sub-second is an assertion;
+   five seconds is a timeout. They lead to opposite investigations.
+5. **"Pre-existing and unrelated" is not accepted without checking.** In the
+   project this method came from, those failures were two real data-loss bugs.
+6. **Plan defects are normal, and hollow tests are too.** The rule that catches
+   them: *name the line where the test fails if you delete its control*.
+7. **Look at the screen before calling it done.** Tests assert that elements
+   exist, not that the composition works.
+8. **The manual gate finds what the tests don't.** In one feature, two manual
+   gates found 11 bugs — more than all the build tasks combined.
+
+Más el flujo — **brainstorm → spec → plan → TDD → gate a mano → merge** — y las
+convenciones de commit.
+
+### `CLAUDE.md` (inglés)
+
+- *Read `AGENT.md` before any work.*
+- Dónde viven las specs y cuándo se escribe una.
+- **La regla de la guía**, con su disparador escrito al lado.
+- **La regla del changelog**, con su disparador escrito al lado.
+- **El idioma humano del proyecto**, declarado. Es un ajuste, no una suposición.
+- Puntero a la memoria y a su generador.
+- Commitear a medida que se avanza.
+
+### `specs/README.md`, `docs/guia-de-uso.md`, `CHANGELOG.md`
+
+Los tres nacen con su índice vacío y **una línea que dice que la estructura es
+intencional**: *"todavía no aplica — el disparador está en `CLAUDE.md`"*. Sin esa
+línea, un agente que abre una carpeta vacía asume que se olvidaron y la ignora.
+
+`docs/guia-de-uso.md` lleva además el campo **Última actualización**, que es lo
+que hace visible el olvido.
+
+### `.claude/skills/verify/SKILL.md`
+
+En blanco con sus preguntas: **cómo se prende, cómo se compila y cómo se maneja
+esta app de punta a punta**, más una sección *Gotchas* vacía. Es la costura de
+stack N°3.
+
+Es de las piezas más valiosas del paquete: sin ella, cada agente vuelve a
+descubrir cómo correr el proyecto.
+
+### `.claude/settings.json`
+
+Nace con `enabledPlugins: {}` y el comentario de qué significa: *este proyecto
+decide qué herramientas son ruido*. Es la costura de stack N°1.
+
+## Los disparadores: qué se enciende cuándo
+
+El esqueleto está entero desde el día 1, pero **cada regla dice por escrito qué
+la activa**:
+
+| regla | se activa cuando |
+|---|---|
+| Guía en el mismo commit | hay un usuario que **no sos vos** |
+| Viñeta de CHANGELOG en el mismo commit | hay una **primera versión distribuible** |
+| Spec antes de construir | la primera funcionalidad que necesita **decisiones antes de código** |
+
+## `/cerrar`: comprueba y avisa, no escribe
+
+El ritual viejo era *"guardá en memoria, guía y arquitectura"*. Tres defectos
+medidos: dos de las tres ya son obligatorias por commit (pedirlas al final
+significa que la regla se rompió y se parcha en el peor momento), el cierre es
+cuando el contexto está más lleno (la dieta de memoria encontró **4 memorias
+cuya `description` se contradecía con su propio cuerpo**, todas escritas al
+cierre), y no nombraba el `CHANGELOG`, el único con vencimiento real.
+
+`/cerrar` hace **dos mitades**:
+
+```
+lo que YA está activo   → ¿está hecho?  (guía, changelog, AGENT.md, memoria)
+lo que TODAVÍA NO       → ¿ya se cumplió el disparador? ¿lo encendemos?
+```
+
+Esa segunda mitad es el punto entero: **la parte que falta no depende de que
+alguien se acuerde, se pregunta sola en cada cierre.**
+
+Comprobaciones concretas:
+
+| comprueba | cómo |
+|---|---|
+| ¿hay commits que tocan lo que ve el usuario y no tocan `docs/guia/`? | `git diff` del rango de la sesión |
+| ¿y sin tocar `CHANGELOG.md`? | idem |
+| ¿el generador de memoria sale con código 0? | corriéndolo |
+| ¿`CBM_ALLOWED_ROOT` apunta a esta carpeta? | leyendo `.mcp.json` |
+| ¿alguna regla nueva merece entrar en `AGENT.md`? | pregunta, con lo que cambió a la vista |
+| ¿algún disparador apagado ya se cumplió? | pregunta |
+
+**Detecta, no lee configuración**: ¿existe `docs/guia/`? ¿`CHANGELOG.md`?
+¿`AGENT.md`? Un proyecto nuevo funciona el primer día sin darlo de alta, y uno
+viejo —CopyNotes mismo— funciona sin adaptarlo.
+
+**Nunca escribe por su cuenta.** Un `/cerrar` que escribiera memorias al cierre
+fabricaría en serie exactamente las 4 memorias vencidas que la dieta encontró.
+Comprueba, avisa, ofrece.
+
+## El sistema de memoria
+
+Viaja **entero**: los 3 campos (`titulo`, `estado`, `verificado`), la regla del
+`description` como única línea de ruteo, el índice generado, y `ARCHIVO.md`
+aparte para lo terminado.
+
+**Una sola copia del generador** para todos los proyectos, en `meto2/memoria/`,
+recibiendo la carpeta de memoria como argumento. Copiar el script a cada proyecto
+haría que un arreglo no llegue nunca a los viejos.
+
+Dos propiedades que hay que conservar si alguien lo toca — las dos ya probadas de
+verdad en CopyNotes, no razonadas:
+
+1. **Falla hacia el lado seguro.** Sin `estado`, la memoria cae en `vigente`, o
+   sea **entra al índice**. Nunca desaparece por un campo mal escrito: queda
+   visible y marcada.
+2. **Sale con código 1** cuando falta un campo, y nombra el archivo. Así
+   `/cerrar` se entera sin que nadie lea la salida.
+
+El riesgo real no es que un hook pise una cabecera (medido: no hay hooks, no hay
+MCP de memoria, nada tocó los archivos en toda la jornada). Es que **dentro de
+dos meses un agente edite una memoria y borre los 3 campos porque no sabe que
+existen**. Una regla escrita no lo evita; una comprobación ruidosa sí.
+
+Va también el párrafo sobre **OKF**: el formato es primo hermano, la diferencia
+exacta es dónde vive `type` (Claude Code lo mete adentro de `metadata`) y
+`[[enlaces]]` vs enlaces markdown. Si algún día importa, el cambio ya está
+identificado.
+
+## La prueba del núcleo agnóstico
+
+El stack entra por **tres costuras y sólo tres**:
+
+1. `.claude/settings.json` — qué plugins se encienden y cuáles se apagan.
+2. `AGENT.md` › *Technical Direction* — el stack declarado en palabras.
+3. `.claude/skills/verify/` — cómo se prende y se compila esta app.
+
+Fuera de esas tres, el núcleo no nombra ninguna tecnología. Prueba mecánica, que
+corre en el gate:
+
+```bash
+grep -riE 'svelte|tailwind|pnpm|dexie|copynotes|hernan|/Users/' plantillas/ comandos/ \
+  | grep -v 'Technical Direction' | grep -v 'skills/verify' | grep -v 'settings.json'
+# debe dar CERO
+```
+
+## El gate a mano
+
+El paquete está listo cuando estos seis pasos pasan, corridos por una persona:
+
+1. `bash instalar.sh` en la Mac: los dos comandos aparecen en Claude Code,
+   `codebase` contesta, y el resumen imprime las tres partes.
+2. `/arrancar` en una carpeta vacía nueva: aparecen los 5 archivos y las 4
+   carpetas, `.mcp.json` apunta a esa carpeta, y `MEMORY.md` existe.
+3. El `grep` de arriba da cero.
+4. Sacarle `estado` a una memoria: el generador la nombra y sale con código 1.
+   Restaurada, vuelve a 0.
+5. `/cerrar` en el proyecto de prueba: dice que guía y changelog **todavía no
+   aplican** porque el disparador no se cumplió, y **no escribe nada**.
+6. `/cerrar` adentro de **CopyNotes**: detecta `docs/guia/`, `CHANGELOG.md` y
+   `AGENT.md`, pregunta por los cuatro, y deja el `git status` limpio. Este es el
+   único paso que prueba la detección contra un proyecto real y viejo.
+
+## Plan de construcción
+
+| tajada | qué entra | listo cuando |
+|---|---|---|
+| **1** | plantillas + `/arrancar` + generador con argumento | pasos 2 y 3 del gate |
+| **2** | `/cerrar` | pasos 5 y 6 del gate |
+| **3** | `instalar.sh` con permiso único y resumen de tres partes | paso 1 del gate |
+| **4** | `README.md` / tutorial en idioma del usuario, y el párrafo de OKF | el gate completo |
+
+Las tajadas 1 y 2 se pueden usar a mano (copiando los dos `.md` a
+`~/.claude/commands/`) antes de que exista el instalador.
+
+## Riesgos
+
+- **Culto al cargo** (el N°1): copiar contenido de CopyNotes en vez de forma. Lo
+  ataca el `grep` del gate y la sección de reglas vacía con su explicación.
+- **Escala**: el método se ganó su peso a lo largo de 49 specs. Un proyecto chico
+  no debería ahogarse — por eso los disparadores, y por eso `/cerrar` pregunta en
+  vez de exigir.
+- **`/cerrar` que escriba solo**: fabricaría memorias vencidas en serie.
+  Prohibido por diseño.
+- **Comandos con nombre en castellano** (`/arrancar`, `/cerrar`) en un paquete
+  cuyo núcleo es en inglés. Decidido así; si algún día viaja de verdad, se le
+  agregan alias en inglés y no se rompe nada.
+
+## Decisiones que esta spec toma (el brief las dejó abiertas)
+
+**A · El paquete NO toca el `~/.claude/CLAUDE.md` global de Hernán.** Es suyo y
+se queda donde está. Pero `instalar.sh` **lo lee y avisa una vez** si encuentra
+reglas de una tecnología ahí adentro: *"tenés reglas de Svelte en tu archivo
+global; se aplican a **todos** tus proyectos, sean o no de Svelte. Si querés,
+movelas al `AGENT.md` de cada uno."* Lee y avisa, no edita. Riesgo cero y
+resuelve el problema real, que es que hoy eso ya aplica a todo.
+
+**B · `.mcp.json` se versiona.** En CopyNotes está en `.gitignore` por una ruta
+absoluta que existe sólo porque el binario se compiló a mano; con el instalador
+oficial el programa se llama **por nombre, sin ruta**. Lo único propio del
+proyecto queda siendo una línea, `CBM_ALLOWED_ROOT`, que escribe `/arrancar`.
+Versionarlo evita que un clon quede sin `codebase` sin que nadie avise, y
+`/cerrar` comprueba que la ruta siga apuntando a la carpeta actual.
+
+**C · Esta spec y las futuras specs del propio `meto2` van en castellano**,
+porque su lector es Hernán. Las **plantillas** que el paquete reparte van en
+inglés, como manda la premisa 4. No es contradicción: son dos lectores distintos.
