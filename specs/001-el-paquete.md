@@ -5,8 +5,9 @@ rondas). **Todo lo que el brief dejó decidido entra acá como premisa y no se
 vuelve a discutir**; lo que estaba abierto se cierra en *Decisiones que esta
 spec toma* al final, marcado para que Hernán lo dé vuelta si quiere.
 
-> **Estado: escrita, sin construir.** Cero código. El repo `~/Projects/meto2`
-> existe con esta spec adentro y nada más.
+> **Estado: en construcción.** Tajada 1 lista (plantillas, `/arrancar`,
+> generador con argumento; pasos 2, 3 y 4 del gate verificados a mano). Faltan
+> las tajadas 2, 3 y 4.
 
 ## En criollo (resumen para Hernán)
 
