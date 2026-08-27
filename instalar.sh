@@ -82,9 +82,13 @@ done
 
 # ------------------------------------------------------------- 4. los plugins
 if command -v claude >/dev/null 2>&1; then
+  # 'claude plugin install' devuelve 0 aunque falle (medido: un nombre que no
+  # existe en el mercado sale 0 e imprime el error). El unico chequeo que sirve
+  # es preguntarle despues a 'claude plugin list' si el complemento esta.
   instalar_plugin() { # nombre_visible  plugin@mercado  repo-de-github
     claude plugin marketplace add "$3" >/dev/null 2>&1
-    if claude plugin install "$2" -y >/dev/null 2>&1; then
+    claude plugin install "$2" -y >/dev/null 2>&1
+    if claude plugin list 2>/dev/null | grep -q "$2"; then
       ok "complemento $1 instalado"
     else
       nopude "no pude instalar el complemento $1"
@@ -94,7 +98,7 @@ if command -v claude >/dev/null 2>&1; then
   instalar_plugin superpowers "superpowers@claude-plugins-official" "anthropics/claude-plugins-official"
   instalar_plugin ponytail    "ponytail@ponytail"                   "DietrichGebert/ponytail"
   instalar_plugin caveman     "caveman@caveman"                     "JuliusBrussee/caveman"
-  instalar_plugin context7    "context7-plugin@context7-marketplace" "upstash/context7"
+  instalar_plugin context7    "context7@context7-marketplace"        "upstash/context7"
 else
   nopude "no encontré el programa 'claude' en la terminal, así que no pude instalar los 4 complementos"
   tetoca "Abrí Claude Code, corré /doctor para que instale su comando de terminal, y volvé a correr este instalador."

@@ -5,9 +5,10 @@ rondas). **Todo lo que el brief dejó decidido entra acá como premisa y no se
 vuelve a discutir**; lo que estaba abierto se cierra en *Decisiones que esta
 spec toma* al final, marcado para que Hernán lo dé vuelta si quiere.
 
-> **Estado: las 4 tajadas escritas.** Del gate a mano quedan verificados los
-> pasos 2, 3, 4, 5 y 6. **Falta el paso 1**: correr `bash instalar.sh` de verdad
-> — baja software, así que lo corre Hernán.
+> **Estado: construido, los 6 pasos del gate pasados.** Hernán corrió
+> `instalar.sh` el 2026-08-27: los dos comandos aparecen, `codebase-memory-mcp
+> 0.10.8` contesta, y el resumen imprimió las tres partes — incluida la de
+> *no pude*, que era real.
 
 ## En criollo (resumen para Hernán)
 
@@ -110,7 +111,12 @@ cambio ya está activo en todos los proyectos.
 2. Deja `memoria/generar-indice.py` accesible (queda en el repo; los comandos lo
    llaman por su ruta, resuelta desde el enlace simbólico).
 3. Instala los plugins del núcleo: **superpowers**, **ponytail**, **caveman**,
-   **context7**.
+   **context7**. Medido el 2026-08-27: **`claude plugin install` sale con código
+   0 aunque falle** (un nombre que no está en el mercado imprime el error y sale
+   0). El único chequeo que sirve es preguntarle después a `claude plugin list`
+   si el complemento está. El nombre del complemento de context7 además cambió
+   —`context7-plugin` → `context7`—, que es exactamente el tipo de cosa que un
+   código de salida mentiroso deja pasar en silencio.
 4. Instala `codebase-memory-mcp` **llamando al instalador oficial de ellos**
    (`install.sh` / `install.ps1` de `github.com/DeusData/codebase-memory-mcp`,
    o la fórmula de Homebrew). Nunca copiar el binario: pesa 282 MB y es
