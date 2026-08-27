@@ -548,6 +548,33 @@ El fracaso es mudo — nadie avisa que dejó de obedecer.
 Fuentes: [Context Rot, Chroma](https://www.trychroma.com/research/context-rot) ·
 [Effective context engineering, Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 
+## Una sola lista de specs (2026-08-27)
+
+El paquete repartía **dos listas de specs escritas a mano**: la de
+`specs/README.md` y la tabla *tema → spec* adentro de `AGENTS.md`. Con tres
+specs no molesta; con quince se contradicen y nadie sabe a cuál creerle. Es el
+mismo defecto que la dieta de memoria del proyecto de origen encontró y nombró:
+*"mantenemos DOS resúmenes y ninguno manda; ésa es la raíz de la deriva"*.
+
+**Se arregló borrando una, no generando las dos.** La tabla se fue de `AGENTS.md`
+a `specs/README.md`, que queda como **único** índice de ruteo. Dos motivos, y el
+segundo pesa más:
+
+1. Si hay una sola lista, no puede contradecirse con nada. Cero código.
+2. `AGENTS.md` se carga **entero en cada sesión**: una tabla de ruteo ahí crece
+   para siempre a costa de todas las sesiones. Sacarla es la misma regla que la
+   sección de arriba predica — *se corta el expediente, se guarda el cartel* —
+   aplicada al propio archivo que la escribe.
+
+Queda un riesgo menor: que `specs/README.md` no nombre una spec que sí existe.
+No se ataca con una regla escrita sino con **una comprobación ruidosa**, que es
+la doctrina de este paquete: `/cerrar` compara los archivos `NNN-*.md` de la
+carpeta contra el índice y canta las que faltan.
+
+**Nota de honestidad:** al escribir la regla del tamaño, `AGENTS.md` creció de
+8.515 a 9.955 bytes. Se le aplicó su propia regla y bajó a 9.479. Sigue siendo
+~1 KB más que antes: es lo que cuesta la regla que evita que llegue a 97 KB.
+
 ## Riesgos
 
 - **Culto al cargo** (el N°1): copiar el contenido de aquel proyecto en vez de su

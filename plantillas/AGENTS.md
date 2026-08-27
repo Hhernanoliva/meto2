@@ -93,24 +93,17 @@ How to write one when the day comes:
   next person will meet it again.
 - Keep the trap that made it hard to find. That is the part worth the tokens.
 
-**Cut the case file, keep the sign.** The headline and the trap stay here; the
-commit hashes, the test counts, the three findings and the blow-by-blow go to
-the spec, and the topic→spec table below points at it. This is the one section
-with no natural ceiling, and it is how an instructions file reaches 97 KB — the
-size measured in the project this method came from, about 24,000 tokens paid in
-every single session.
+**Cut the case file, keep the sign.** Headline and trap stay here; the commit
+hashes, test counts and blow-by-blow go to the spec. This is the only section
+with no ceiling — it is how an instructions file reaches 97 KB, measured, ~24,000
+tokens paid in every session.
 
-Why that matters is not truncation. Measured 2026-08-27: a 121 KB file loads
-whole, with no warning and nothing cut. The cost is different and worse:
-published research on 18 frontier models found that **every one of them gets
-worse as input grows** — gradually, with no cliff — and that text which is
-present but irrelevant to the task at hand measurably lowers accuracy. A case
-file is exactly that: irrelevant to 99% of tasks, and paid for in all of them.
-
-**Order is load-bearing, so keep it.** The same research found information is
-retrieved best when it sits near the START of the context. That is why this file
-opens with what must never be violated and ends with the reference tables. New
-sections go where their urgency says, not at the bottom because that is easier.
+Nothing gets truncated (measured: 121 KB loads whole). The cost is worse than
+that: every frontier model tested gets gradually worse as its input grows, and
+text that is present but irrelevant to the task measurably lowers accuracy. A
+case file is irrelevant to 99% of tasks and paid for in all of them. **Order
+matters too** — what sits near the start is retrieved best, which is why this
+file opens with what cannot be violated and ends with references.
 
 ## Verification Rules
 
@@ -194,14 +187,15 @@ tests, critical flows are driven end to end, docs updated, nothing unrelated
 broke, data-loss risk considered. Name the high-risk areas of THIS project — the
 ones that get extra care.*
 
-## Where Detail Lives (topic → spec)
+## Where Detail Lives
 
-| Topic | Spec |
-|---|---|
-| | |
+Detail lives in `specs/`. **The topic → spec table is in `specs/README.md`, and
+that is the only place it exists.**
 
-*One row per topic once specs exist. This table is how an agent finds the right
-spec without reading all of them.*
+It used to live here, and that was a defect: this file is loaded in full in every
+session, so a routing table here grows forever at the cost of every session — and
+a second copy of a list is a list that will disagree with the first one within a
+year. One list, one click away.
 
 ## Agent-Controlled Development
 

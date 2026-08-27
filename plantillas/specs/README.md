@@ -18,3 +18,15 @@ Acceptance / Tests / Agent notes.
 ## Spec Order
 
 *(one numbered line per spec, in order)*
+
+## Where Detail Lives (topic → spec)
+
+**This table is the only routing index, and it lives only here.** An agent
+looking for the right spec reads this file; nothing duplicates it.
+
+| Topic | Spec |
+|---|---|
+| | |
+
+One row per topic once specs exist. Keep the topic in the words someone would
+actually use to look for it, not in the spec's own vocabulary.

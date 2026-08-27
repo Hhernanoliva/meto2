@@ -83,6 +83,22 @@ if [ -f "$PROJ/.mcp.json" ]; then
 else
   echo "  (este proyecto no tiene .mcp.json)"
 fi
+
+# Una sola lista de specs, y una comprobacion ruidosa de que no miente. La regla
+# escrita "manteneme al dia" no alcanza; que el cierre lo cante, si.
+if [ -d "$PROJ/specs" ]; then
+  HUERFANAS=""
+  for F in $(find "$PROJ/specs" -maxdepth 1 -name '[0-9][0-9][0-9]-*.md' 2>/dev/null); do
+    grep -q "$(basename "$F")" "$PROJ/specs/README.md" 2>/dev/null || HUERFANAS="$HUERFANAS $(basename "$F")"
+  done
+  if [ -n "$HUERFANAS" ]; then
+    echo
+    echo "--- SPECS QUE NO ESTAN EN EL INDICE (specs/README.md)"
+    for H in $HUERFANAS; do echo "  falta:  $H"; done
+    echo "  el indice de specs es UNO SOLO y es specs/README.md. Si no las nombra,"
+    echo "  nadie las va a encontrar."
+  fi
+fi
 echo
 echo "--- LO QUE ESTE PROYECTO LE COBRA A CADA SESION"
 # El archivo del metodo se carga entero en cada sesion, para siempre. No hay
