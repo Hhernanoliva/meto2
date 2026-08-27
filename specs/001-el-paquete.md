@@ -423,7 +423,7 @@ El paquete está listo cuando estos seis pasos pasan, corridos por una persona:
 
 1. `bash instalar.sh` en la Mac: los dos comandos aparecen en Claude Code,
    `codebase` contesta, y el resumen imprime las tres partes.
-2. `/arrancar` en una carpeta vacía nueva: aparecen los 5 archivos y las 4
+2. `/arrancar` en una carpeta vacía nueva: aparecen los 8 archivos y las 4
    carpetas, `.mcp.json` apunta a esa carpeta, y `MEMORY.md` existe.
 3. El `grep` de arriba da cero, y `python3 memoria/prueba.py` sale con 0. Esa
    prueba cubre lo que se rompe en silencio —una memoria que desaparece del

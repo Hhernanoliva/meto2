@@ -1,6 +1,6 @@
 # Specs Index
 
-This folder holds the product and technical specs. Agents read `AGENT.md` first,
+This folder holds the product and technical specs. Agents read `AGENTS.md` first,
 then the relevant spec, before meaningful implementation work.
 
 Naming: `NNN-short-name.md`, three digits, never renumbered. A spec is a

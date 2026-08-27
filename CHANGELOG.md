@@ -42,6 +42,10 @@ implementa**, no al publicar.
   pregunta antes de bajar nada, diciendo qué baja y de dónde. Termina siempre con
   tres partes: qué instaló, qué no pudo **y por qué**, y qué te toca a vos con el
   comando exacto para copiar
+- **El índice de specs que se crea en cada proyecto mandaba a leer un archivo
+  que no existe.** Decía `AGENT.md` cuando el archivo del método es `AGENTS.md`.
+  Los archivos se creaban perfectos y todas las pruebas pasaban: lo que estaba
+  mal era una frase, y un agente la iba a repetir tal cual
 - **El instalador te avisa que hay que salir y volver a entrar a Claude Code.**
   La lista de comandos la lee una sola vez, al abrir la sesión: sin ese aviso
   escribís `/arrancar`, no aparece, y lo lógico es concluir que la instalación
