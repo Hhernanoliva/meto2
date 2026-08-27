@@ -32,8 +32,13 @@ Una sola vez, no paso por paso. Al final imprime tres partes, siempre las tres:
 👉 Te toca:     ... con el comando exacto para copiar y pegar
 ```
 
-Los dos comandos quedan como **enlaces** al repo, no como copias: si mañana los
+Los tres comandos quedan como **enlaces** al repo, no como copias: si mañana los
 mejorás acá, el cambio ya está activo en todos tus proyectos.
+
+Al final te hace **una segunda pregunta, opcional**: si querés un recordatorio que
+se dispare con cada mensaje que mandes, en cualquier carpeta, diciéndole al agente
+que vaya a leer quién sos antes de contestar. No lleva tu descripción adentro —
+sólo apunta a tu `~/.claude/CLAUDE.md`, donde eso lo escribís vos.
 
 ### Paso 2 — una vez por proyecto
 
@@ -87,6 +92,31 @@ como un olvido:
 | la spec antes de construir | la primera cosa que necesita **decisiones antes de código** |
 
 ---
+
+## `/simple`: decime eso otra vez, pero para mí
+
+Cuando una respuesta te llegó escrita para un ingeniero, en vez de pedir *"volvé a
+explicármelo"* escribís `/simple`.
+
+Vuelve a decir **lo mismo** —sin recortar la parte difícil, sin volverla vaga—
+pero para el lector que declaraste: cada término traducido la primera vez que
+aparece, primero qué significa para vos, y números sólo cuando cambian una
+decisión.
+
+## Por qué existe: una regla escrita se pierde
+
+*"Explicame simple"* escrito en un archivo se carga al arrancar la sesión, y
+después compite contra todo lo que llega más tarde: las instrucciones de cada
+herramienta, la salida de cada comando. Cuando el contexto se comprime, esa frase
+vieja es lo primero que se poda.
+
+Por eso no alcanza con escribirla. `/arrancar` deja en el proyecto un recordatorio
+de un renglón que se **re-inyecta con cada mensaje**: *"releé Collaboration Style
+y Human Language en `AGENTS.md`, y escribí para ESE lector"*.
+
+**Apunta, nunca copia.** No lleva adentro quién sos, dice dónde leerlo. Por eso no
+se desactualiza, funciona aunque completes esas secciones tres semanas después, y
+sirve igual para cualquier persona: cada proyecto declara su propio lector.
 
 ## Qué hace `/cerrar`
 
@@ -213,8 +243,8 @@ complementos apagados.
 
 ```
 instalar.sh          paso 1: una vez por computadora
-comandos/            /arrancar y /cerrar (se enlazan a ~/.claude/commands/)
-memoria/             el generador del índice, una sola copia para todos
+comandos/            /arrancar, /cerrar y /simple (se enlazan a ~/.claude/commands/)
+memoria/             el generador del índice y el agregador de recordatorios
 plantillas/          las cajas vacías que /arrancar copia
 specs/               las decisiones de este paquete (en castellano)
 ```

@@ -75,7 +75,7 @@ prueba mecánica, abajo en *La prueba del núcleo agnóstico*.
 5. **El instalador instala todo**, y le explica al usuario qué instaló, qué no
    pudo y por qué, y qué le toca a él con el comando exacto para copiar.
 6. **OKF** no recibe más lugar que un párrafo explicando el parentesco.
-7. **Nombre del repo:** `meto2`. Comandos: `/arrancar` y `/cerrar`.
+7. **Nombre del repo:** `meto2`. Comandos: `/arrancar`, `/cerrar` y `/simple`.
 
 ## Estructura del repo `meto2`
 
@@ -86,8 +86,10 @@ meto2/
   comandos/
     arrancar.md                      # → ~/.claude/commands/arrancar.md
     cerrar.md                        # → ~/.claude/commands/cerrar.md
+    simple.md                        # → ~/.claude/commands/simple.md
   memoria/
     generar-indice.py                # el generador, UNA copia para todos los proyectos
+    agregar-hook.py                  # agrega el recordatorio sin pisar hooks ajenos
   plantillas/
     AGENTS.md
     CLAUDE.md
@@ -109,7 +111,7 @@ cambio ya está activo en todos los proyectos.
 
 ### Paso 1 — por computadora: `bash instalar.sh`
 
-1. Enlaza `comandos/arrancar.md` y `comandos/cerrar.md` a `~/.claude/commands/`.
+1. Enlaza los tres comandos a `~/.claude/commands/`.
 2. Deja `memoria/generar-indice.py` accesible (queda en el repo; los comandos lo
    llaman por su ruta, resuelta desde el enlace simbólico).
 3. Instala los plugins del núcleo: **superpowers**, **ponytail**, **caveman**,
@@ -467,3 +469,46 @@ Escribir en los formatos de nueve agentes distintos —como hace el instalador d
 `codebase-memory-mcp`— se hace **el día que haya un segundo agente en uso de
 verdad**, no antes. Hasta entonces es mantenimiento de nueve archivos que nadie
 lee.
+
+
+**E · Para quién se escribe se hace cumplir con un hook, no con una frase.**
+Decidido el 2026-08-27.
+
+El problema medido: la regla *"explicame simple, no soy ingeniero"* ya existía en
+el `~/.claude/CLAUDE.md` de Hernán, se cargaba en cada sesión, **y fallaba igual**.
+Una regla que llega al arranque compite contra todo lo que llega después —las
+instrucciones de cada skill, la salida de cada herramienta— y es lo primero que la
+compresión de contexto poda.
+
+No es una teoría: el plugin `caveman` chocó con lo mismo y dejó el diagnóstico
+escrito en su propio código — *"el resumen de 2 oraciones era muy débil; los
+modelos volvían a ser verbosos a mitad de conversación, sobre todo después de que
+la compresión de contexto lo podaba"*. Su arreglo fueron **dos** hooks: las reglas
+completas al arrancar más un recordatorio corto **re-inyectado en cada mensaje**.
+Es la misma trampa que esta spec ya nombraba para la memoria: *una regla escrita no
+lo evita; una comprobación ruidosa sí*.
+
+Tres piezas, y la línea entre forma y contenido pasa por el medio:
+
+1. **Por proyecto (forma, viaja).** `plantillas/.claude/settings.json` trae un
+   hook `UserPromptSubmit` de un renglón: *releé Collaboration Style y Human
+   Language en `AGENTS.md`, y escribí para ESE lector*. **Apunta, nunca copia** —
+   no puede quedar desactualizado, y funciona aunque esas secciones se completen
+   tres semanas después. Esto es lo que convierte *Collaboration Style* de adorno
+   en algo que se cumple, y lo tiene **cualquier persona en cualquier computadora**.
+   `/arrancar` debe conservar ese bloque al escribir `enabledPlugins`.
+2. **Por computadora (contenido, es del usuario).** `instalar.sh` hace una segunda
+   pregunta, aparte de la del software y con un "no" que no rompe nada: agrega el
+   mismo tipo de recordatorio apuntando al `~/.claude/CLAUDE.md` de esa persona.
+   **Sigue sin editar ese archivo** (decisión A): si no encuentra una sección que
+   diga quién es, lo pone en *"👉 Te toca"*. Lo escribe `memoria/agregar-hook.py`,
+   que es idempotente y no toca ningún otro hook.
+3. **`/simple` (la salida de emergencia).** Cuando igual se escapa. Vuelve a decir
+   lo mismo sin recortar la parte difícil, para el lector declarado.
+
+**Y nombra cuál gana.** El recordatorio dice explícitamente que si choca con la
+brevedad de `caveman`, **gana la claridad**: los dos tiran para lados opuestos, y
+sin decirlo el resultado es jerga más corta — lo peor de los dos mundos.
+
+Descartado hacerlo skill: un skill se carga cuando el modelo cree que viene al
+caso, y la falla es justamente que **no se da cuenta de que está siendo confuso**.

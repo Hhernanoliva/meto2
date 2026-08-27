@@ -1,3 +1,16 @@
 {
-  "enabledPlugins": {}
+  "enabledPlugins": {},
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Before answering: re-read Collaboration Style and Human Language in AGENTS.md, and write for THAT reader. A rule read once at startup loses to everything that arrives after it.'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
 }

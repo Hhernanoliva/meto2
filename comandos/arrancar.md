@@ -102,8 +102,10 @@ Why off by default, and say it in the question: a tool left on costs context in
 is missed, and that day is obvious. When one mistake is silent and the other is
 loud, choose the loud one.
 
-Then write `.claude/settings.json` with **every** optional plugin listed
-explicitly — `false` for the ones not ticked, `true` for the ones ticked:
+Then edit `.claude/settings.json`, **keeping its `hooks` block exactly as it
+arrived** — that hook is what makes *Collaboration Style* enforceable instead of
+decorative — and fill `enabledPlugins` with **every** optional plugin listed
+explicitly: `false` for the ones not ticked, `true` for the ones ticked:
 
 ```json
 {

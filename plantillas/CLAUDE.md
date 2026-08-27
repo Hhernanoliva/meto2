@@ -32,7 +32,16 @@ It exits **1** and names the file when a field is missing. A memory with no
 
 ## Tooling
 
-`.claude/settings.json` lists which plugins this project turns off. **This project
+`.claude/settings.json` does two things.
+
+Its `hooks` block re-injects one line before **every** message: *re-read
+Collaboration Style and Human Language in `AGENTS.md`*. It **points, it never
+copies** — so it cannot go stale, and it works even if those sections are filled
+in three weeks from now. It exists because a rule loaded once at session start
+loses to every instruction that arrives after it, and is the first thing context
+compression throws away. Keep it, and keep it short: it rides on every turn.
+
+Its `enabledPlugins` block lists which plugins this project turns off. **This project
 decides which tools are noise.** A plugin left on that this project never uses
 costs context in every single session, silently. An explicit `false` means this
 project decided; an absent entry means nobody did.

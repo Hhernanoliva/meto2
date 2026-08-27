@@ -56,7 +56,7 @@ Voy a bajar de internet software que no es mío:
   · codebase-memory-mcp, con el instalador oficial de ellos:
       github.com/DeusData/codebase-memory-mcp
 
-Además voy a dejar dos comandos nuevos en $CMDDIR
+Además voy a dejar tres comandos nuevos en $CMDDIR
 (enlaces al repo que ya tenés acá, eso no baja nada).
 
 TXT
@@ -69,7 +69,7 @@ echo
 
 # ------------------------------------------------------------- 3. los comandos
 mkdir -p "$CMDDIR"
-for c in arrancar cerrar; do
+for c in arrancar cerrar simple; do
   DEST="$CMDDIR/$c.md"
   if [ -e "$DEST" ] && [ ! -L "$DEST" ]; then
     nopude "Ya había un archivo propio en $DEST y no lo pisé."
@@ -123,9 +123,50 @@ else
   fi
 fi
 
+# ------------------------ 5b. el recordatorio de para quién se escribe
+# Segunda pregunta, y aparte: la primera era bajar software, esta toca TU
+# configuracion. Un "no" aca no rompe nada de lo anterior.
+#
+# El hook APUNTA, nunca copia: no lleva adentro quien sos, dice donde leerlo.
+# Asi no se desactualiza, y sirve igual para cualquier persona en cualquier PC.
+GLOBAL="$HOME/.claude/CLAUDE.md"
+HOOKTXT="Before answering: re-read who you are writing for in ~/.claude/CLAUDE.md, and write for THAT person. A rule read once at startup loses to everything that arrives after it."
+if [ "$SI" != "si" ]; then
+  cat <<TXT
+
+Una cosa más, opcional, y toca TU configuración (no baja nada).
+
+Cada proyecto que armes con /arrancar ya se va a acordar solo de para quién
+escribir. Fuera de esos proyectos, no.
+
+Puedo agregar un recordatorio que se dispare con cada mensaje que mandes, en
+cualquier carpeta. No lleva tu descripción adentro: sólo dice "andá a leer quién
+es esta persona en $GLOBAL". Lo que decís de vos lo escribís
+ahí, y lo cambiás cuando quieras sin tocar nada más.
+
+Para sacarlo después: borrás el bloque "UserPromptSubmit" de
+$HOME/.claude/settings.json
+
+TXT
+  printf "¿Lo agrego? [s/N] "
+  read -r RH
+  case "$RH" in
+    s|S|si|Si|SI|y|Y|yes)
+      if python3 "$REPO/memoria/agregar-hook.py" "$HOME/.claude/settings.json" "$HOOKTXT"; then
+        ok "recordatorio de para quién escribir, activo en cada mensaje"
+      else
+        nopude "no pude agregar el recordatorio a tu settings.json"
+      fi
+      if ! grep -qiE '^#{1,3} *(communication|comunicaci|audience|lector|qui[eé]n)' "$GLOBAL" 2>/dev/null; then
+        tetoca "Escribí quién sos en $GLOBAL, así el recordatorio tiene qué leer. Una sección '## Communication' con, por ejemplo: 'No soy ingeniero: explicame en castellano llano, sin jerga sin traducir.'"
+      fi
+      ;;
+    *) echo "Listo, no toqué tu configuración." ;;
+  esac
+fi
+
 # ------------------------------------- 6. el CLAUDE.md global: leer y avisar
 # Decisión A de la spec: se lee y se avisa, NUNCA se edita. Es tuyo.
-GLOBAL="$HOME/.claude/CLAUDE.md"
 AVISO=""
 if [ -f "$GLOBAL" ]; then
   AVISO=$(grep -oiE 'svelte|tailwind|react|vue|next\.js|django|rails|flutter|swiftui' "$GLOBAL" \
