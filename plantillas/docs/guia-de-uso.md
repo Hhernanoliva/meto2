@@ -2,12 +2,13 @@
 
 Todo lo que se puede hacer en esta app hoy, organizado por tema en `docs/guia/`.
 Cada archivo se actualiza cuando cambia su tema.
-*(Escribir esta guía en el idioma humano del proyecto, declarado en `CLAUDE.md`.)*
+*(Escribir esta guía en el idioma humano del proyecto, declarado en `AGENTS.md`.)*
 
 Última actualización: —
 
 > **Todavía no aplica.** No hay todavía un usuario que no seas vos: ése es el
-> disparador, y está escrito en `CLAUDE.md`. La carpeta `docs/guia/` existe vacía
+> disparador, y está escrito en `AGENTS.md` › *The User Guide Rule*. La carpeta
+> `docs/guia/` existe vacía
 > a propósito — cuando haya alguien más usando esto, ya hay dónde escribir.
 
 ## Temas

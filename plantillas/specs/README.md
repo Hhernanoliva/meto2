@@ -11,7 +11,8 @@ Sections of a spec: Objective / What enters / What does not / Data / Flows /
 Acceptance / Tests / Agent notes.
 
 > **Empty on purpose.** No feature has yet needed decisions made before code —
-> that is the trigger, and it is written down in `CLAUDE.md`. The folder exists
+> that is the trigger, and it is written down in `AGENTS.md` › *The Specs Rule*.
+> The folder exists
 > so the first spec has somewhere to land, not because one was forgotten.
 
 ## Spec Order
