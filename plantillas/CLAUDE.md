@@ -6,6 +6,18 @@
   (index in `specs/README.md`).
 - **Commit as you go, not all at once at the end.**
 
+## This File Outranks Your Global Rules
+
+A global `~/.claude/CLAUDE.md` applies to **every** project on this machine,
+including the ones it was never written for. If it names a stack, a package
+manager, a UI flow or a testing convention, **none of that applies here unless
+`AGENT.md` › Technical Direction says it does.**
+
+Write the exception down here the first time it bites — one line naming what does
+not apply and why. A rule inherited from a project this is not costs an agent a
+wrong assumption in every session, and nothing in the code will ever contradict
+it: it fails silently, as a suggestion that sounds informed.
+
 ## Human Language
 
 The human language of this project is: **<DECLARE IT HERE>**.

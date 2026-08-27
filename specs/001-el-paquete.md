@@ -220,6 +220,12 @@ convenciones de commit.
 ### `CLAUDE.md` (inglés)
 
 - *Read `AGENT.md` before any work.*
+- **Que este archivo le gana al `CLAUDE.md` global.** Agregado el 2026-08-27,
+  después de ver que el propio `meto2` necesitó exactamente esa sección: un
+  global con reglas de un stack se aplica a todos los proyectos de la máquina,
+  incluso a los que no son de ese stack, y falla en silencio — como una
+  sugerencia que suena informada. `instalar.sh` avisa una vez; esta línea es la
+  que lo arregla en cada proyecto.
 - Dónde viven las specs y cuándo se escribe una.
 - **La regla de la guía**, con su disparador escrito al lado.
 - **La regla del changelog**, con su disparador escrito al lado.
