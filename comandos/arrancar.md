@@ -1,6 +1,6 @@
 ---
 description: Set up the meto2 method in the current project folder (5 files, 4 folders, memory).
-allowed-tools: Bash, Read, Edit
+allowed-tools: Bash, Read, Edit, Write, AskUserQuestion
 ---
 
 # /arrancar — put the method into this project
@@ -59,6 +59,23 @@ done
 mkdir -p "$MEMDIR"
 python3 "$GEN" "$MEMDIR"; MEM=$?
 
+# El inventario se lee EN VIVO, no de una lista escrita a mano: una lista
+# escrita envejece, y en otra computadora ya nace mintiendo.
+NUCLEO=" superpowers@claude-plugins-official ponytail@ponytail caveman@caveman context7@context7-marketplace "
+echo
+echo "--- COMPLEMENTOS CARGADOS EN ESTA COMPUTADORA"
+claude plugin list 2>/dev/null | grep "❯" | sed "s/.*❯ //" | while read -r P; do
+  case "$NUCLEO" in *" $P "*) echo "  nucleo    $P" ;; *) echo "  opcional  $P" ;; esac
+done
+echo
+echo "--- LO QUE NO TIENE INTERRUPTOR POR PROYECTO (queda encendido igual)"
+echo "  skills sueltos en ~/.claude/skills:  $(ls "$HOME/.claude/skills" 2>/dev/null | wc -l | tr -d " ")"
+echo "  agentes en ~/.claude/agents:         $(ls "$HOME/.claude/agents" 2>/dev/null | wc -l | tr -d " ")"
+echo "  servidores MCP globales:             $(python3 -c "
+import json,os
+try: print(len(json.load(open(os.path.expanduser('~/.claude.json'))).get('mcpServers',{})))
+except Exception: print(0)")"
+
 echo
 echo "=== /arrancar ==="
 echo "proyecto:  $NAME  ($PROJ)"
@@ -67,7 +84,40 @@ echo "intactos: ${INTACTOS:-  (ninguno)}"
 echo "memoria:  $MEMDIR  (generador salió $MEM)"
 ```
 
-## Step 2 — report it, do not just paste it
+## Step 2 — one question: which tools does THIS project need?
+
+Skip this whole step if `.claude/settings.json` was reported as **kept** (it
+already existed): somebody already decided, and re-deciding for them is worse
+than any list.
+
+Otherwise, ask **one** question with checkboxes, using the live inventory the
+script printed:
+
+- The four marked **nucleo** stay on. They are the method itself.
+- Every one marked **opcional** starts **off**. Offer them as checkboxes and turn
+  on only what the person ticks.
+
+Why off by default, and say it in the question: a tool left on costs context in
+**every session, forever, invisibly**. A tool left off costs one line the day it
+is missed, and that day is obvious. When one mistake is silent and the other is
+loud, choose the loud one.
+
+Then write `.claude/settings.json` with **every** optional plugin listed
+explicitly — `false` for the ones not ticked, `true` for the ones ticked:
+
+```json
+{
+  "enabledPlugins": {
+    "un-complemento@su-mercado": false,
+    "otro@su-mercado": true
+  }
+}
+```
+
+Explicit `false` beats leaving it out. An absent entry reads as "nobody decided";
+a written `false` reads as "this project decided, and this is what it decided".
+
+## Step 3 — report it, do not just paste it
 
 Tell the person, **in the human language of the conversation**, plainly and
 without jargon:
@@ -81,6 +131,11 @@ without jargon:
    Offer to do it now by asking about the project.
 
 Also mention, in one line each, only if true:
+- **What could not be turned off**, using the numbers the script printed: loose
+  skills, agents and global MCP servers have no per-project switch, so they stay
+  on whatever this project decides. Say it plainly instead of implying the
+  project is clean. If one of them is noise in *every* project, the place to
+  remove it is the global setup, not here.
 - The generator exited non-zero (a memory is missing a field — it names which).
 - `docs/guia/` and `CHANGELOG.md` say "not applicable yet" **on purpose**: their
   triggers are written down in `CLAUDE.md` and have not been met.

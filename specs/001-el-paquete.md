@@ -161,8 +161,21 @@ y **4 carpetas**: `specs/`, `docs/guia/`, `docs/superpowers/` (con `specs/` y
 Además:
 
 - Genera `.mcp.json` con `CBM_ALLOWED_ROOT` apuntando a **esta** carpeta.
-- Escribe `.claude/settings.json` con la lista de plugins apagados vacía y el
-  comentario de para qué sirve.
+- **Pregunta una sola vez qué herramientas necesita ESTE proyecto**, con el
+  inventario leído en vivo (`claude plugin list`), no de una lista escrita a
+  mano que envejece. Los 4 del núcleo —superpowers, ponytail, caveman,
+  context7— quedan encendidos; **todo el resto arranca apagado** y se prende lo
+  que la persona marque. El desbalance es a propósito: un complemento prendido
+  de más cuesta contexto en cada sesión, para siempre, y **en silencio**; uno
+  apagado de más cuesta un renglón el día que se nota. Entre un error mudo y
+  uno ruidoso, se elige el ruidoso. Escribe `.claude/settings.json` con **todos**
+  los opcionales nombrados explícitamente (`false` los no marcados): un `false`
+  escrito dice "este proyecto decidió", una ausencia dice "nadie decidió".
+- **Dice qué NO pudo apagar.** Medido el 2026-08-27: los complementos tienen
+  interruptor por proyecto (`enabledPlugins`), pero los skills sueltos de
+  `~/.claude/skills`, los agentes de `~/.claude/agents` y los servidores MCP
+  globales **no lo tienen**. `/arrancar` imprime cuántos son. Fingir que dejó el
+  proyecto limpio sería peor que no preguntar.
 - Escribe `.claude/skills/verify/SKILL.md` **en blanco, con sus preguntas**.
 - Inicia la memoria: crea `~/.claude/projects/<slug>/memory/` y corre el
   generador para que `MEMORY.md` exista desde el primer día. El `<slug>` se
