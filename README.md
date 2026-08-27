@@ -20,7 +20,7 @@ que vengan después.
 ### Paso 0 — traelo
 
 ```bash
-git clone https://github.com/<usuario>/meto2.git ~/Projects/meto2
+git clone https://github.com/Hhernanoliva/meto2.git ~/Projects/meto2
 ```
 
 Necesitás **Claude Code** ya instalado, más `git`, `curl` y `python3`. Anda en
