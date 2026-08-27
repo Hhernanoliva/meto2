@@ -64,17 +64,32 @@ python3 "$GEN" "$MEMDIR"; MEM=$?
 NUCLEO=" superpowers@claude-plugins-official ponytail@ponytail caveman@caveman context7@context7-marketplace "
 echo
 echo "--- COMPLEMENTOS CARGADOS EN ESTA COMPUTADORA"
-claude plugin list 2>/dev/null | grep "❯" | sed "s/.*❯ //" | while read -r P; do
-  case "$NUCLEO" in *" $P "*) echo "  nucleo    $P" ;; *) echo "  opcional  $P" ;; esac
-done
+# Cada complemento se anuncia en CADA sesion con la descripcion de cada una de
+# sus skills y agentes. Eso es lo que se cobra, y es contable: se cuenta.
+python3 - "$NUCLEO" <<'PY'
+import json, os, sys, glob
+nucleo = sys.argv[1].split()
+try:
+    inst = json.load(open(os.path.expanduser('~/.claude/plugins/installed_plugins.json')))['plugins']
+except Exception:
+    inst = {}
+for pid in sorted(inst):
+    ruta = inst[pid][0].get('installPath', '')
+    sk = len(glob.glob(os.path.join(ruta, 'skills', '*', 'SKILL.md')))
+    ag = len(glob.glob(os.path.join(ruta, 'agents', '*.md')))
+    marca = 'nucleo  ' if pid in nucleo else 'opcional'
+    print('  %s  %-42s %2d skills, %2d agentes' % (marca, pid, sk, ag))
+PY
 echo
-echo "--- LO QUE NO TIENE INTERRUPTOR POR PROYECTO (queda encendido igual)"
+echo "--- LO QUE SE COBRA EN CADA SESION Y NO TIENE INTERRUPTOR POR PROYECTO"
 echo "  skills sueltos en ~/.claude/skills:  $(ls "$HOME/.claude/skills" 2>/dev/null | wc -l | tr -d " ")"
 echo "  agentes en ~/.claude/agents:         $(ls "$HOME/.claude/agents" 2>/dev/null | wc -l | tr -d " ")"
-echo "  servidores MCP globales:             $(python3 -c "
+echo
+echo "--- LO QUE NO SE COBRA (medido el 2026-08-27 con /context)"
+echo "  servidores MCP: $(python3 -c "
 import json,os
 try: print(len(json.load(open(os.path.expanduser('~/.claude.json'))).get('mcpServers',{})))
-except Exception: print(0)")"
+except Exception: print(0)") globales, y sus herramientas cuestan CERO hasta que se usan."
 
 echo
 echo "=== /arrancar ==="
@@ -137,11 +152,24 @@ the method** — every agent reads it, whichever tool it runs in — and **`CLAU
 is only Claude Code's plumbing**, importing the other on its first line.
 
 Also mention, in one line each, only if true:
+- **The receipt, not a promise.** Add up the skills and agents of the plugins
+  that were left off and say the total: *"apagaste N complementos: X skills y Y
+  agentes menos anunciados en cada sesión"*. Counts, never token estimates —
+  those would be invented, and this method does not do invented numbers.
+- **It does not take effect in this session.** Plugins are read once, when the
+  session opens; this file was written afterwards. Say so, and say how to check:
+  restart and run `/context` — the Skills and Custom agents lines should drop.
+  Measured 2026-08-27: without that sentence the change looks like it did
+  nothing, and the obvious conclusion is that it does not work.
 - **What could not be turned off**, using the numbers the script printed: loose
-  skills, agents and global MCP servers have no per-project switch, so they stay
-  on whatever this project decides. Say it plainly instead of implying the
-  project is clean. If one of them is noise in *every* project, the place to
-  remove it is the global setup, not here.
+  skills and agents have no per-project switch, so they stay on. Say it plainly
+  instead of implying the project is clean. If one of them is noise in *every*
+  project, the place to remove it is the global setup, not here.
+- **Keep it in proportion, and say it.** Measured 2026-08-27 on a real machine:
+  the fixed toll of a session was ~28,000 tokens, of which everything this
+  question can reach was ~6,000. Long context and long answers cost more than
+  every plugin combined. This step is worth doing and it is not the big lever;
+  claiming otherwise is the kind of promise this method exists to avoid.
 - The generator exited non-zero (a memory is missing a field — it names which).
 - `docs/guia/` and `CHANGELOG.md` say "not applicable yet" **on purpose**: their
   triggers are written down in `CLAUDE.md` and have not been met.

@@ -176,11 +176,26 @@ Además:
   uno ruidoso, se elige el ruidoso. Escribe `.claude/settings.json` con **todos**
   los opcionales nombrados explícitamente (`false` los no marcados): un `false`
   escrito dice "este proyecto decidió", una ausencia dice "nadie decidió".
-- **Dice qué NO pudo apagar.** Medido el 2026-08-27: los complementos tienen
-  interruptor por proyecto (`enabledPlugins`), pero los skills sueltos de
-  `~/.claude/skills`, los agentes de `~/.claude/agents` y los servidores MCP
-  globales **no lo tienen**. `/arrancar` imprime cuántos son. Fingir que dejó el
-  proyecto limpio sería peor que no preguntar.
+- **Dice qué NO pudo apagar, y qué no hacía falta apagar.** Medido el 2026-08-27
+  con `/context` en una corrida real: los skills sueltos de `~/.claude/skills` y
+  los agentes de `~/.claude/agents` no tienen interruptor por proyecto y **sí se
+  cobran**. Los **servidores MCP cuestan CERO** hasta que se usan: sus 38
+  herramientas figuraban como `loaded on-demand · 0 tokens`. La primera versión
+  los listaba como costo inevitable — era **falso**, y advertir de un costo que
+  no existe es peor que no advertir.
+- **Da un recibo, no una promesa.** Cuenta los skills y agentes de cada
+  complemento —leyéndolos de su carpeta, no estimándolos— y al final dice cuántos
+  quedaron sin anunciarse. **Cuentas, nunca tokens estimados**: un método que
+  predica medir no puede cerrar con un número inventado.
+- **Avisa que no se ve hasta la sesión siguiente.** Los complementos se leen una
+  sola vez, al abrir la sesión; el archivo se escribe después. Sin esa frase el
+  cambio parece no haber hecho nada, y la conclusión obvia es que no funciona.
+  Se comprueba reiniciando y mirando `/context`.
+- **Y lo pone en proporción.** Medido en una máquina real: el peaje fijo de una
+  sesión era ~28.000 tokens y todo lo que esta pregunta alcanza eran ~6.000. El
+  contexto largo y las respuestas largas cuestan más que todos los complementos
+  juntos. El paso vale la pena y **no es la palanca grande**; decir lo contrario
+  es exactamente la clase de promesa que este método existe para evitar.
 - Escribe `.claude/skills/verify/SKILL.md` **en blanco, con sus preguntas**.
 - Inicia la memoria: crea `~/.claude/projects/<slug>/memory/` y corre el
   generador para que `MEMORY.md` exista desde el primer día. El `<slug>` se
@@ -419,6 +434,26 @@ El paquete está listo cuando estos seis pasos pasan, corridos por una persona:
 
 Las tajadas 1 y 2 se pueden usar a mano (copiando los dos `.md` a
 `~/.claude/commands/`) antes de que exista el instalador.
+
+## Lo que encontró el gate a mano (2026-08-27)
+
+Tres defectos que **ninguna de las seis pruebas automáticas podía ver**, todos
+salidos de una persona corriendo los comandos de verdad y leyendo la salida:
+
+1. **Punteros mentirosos.** Tres plantillas decían que las reglas vivían en
+   `CLAUDE.md` después de que se mudaran a `AGENTS.md`. Los archivos se creaban
+   perfectos; lo que estaba mal era una frase, y el agente la repitió fielmente.
+   Ahora los carteles nombran la sección exacta, así un rename futuro rompe a la
+   vista en vez de mentir en silencio.
+2. **`zsh` no es `bash`.** `ls specs/[0-9][0-9][0-9]-*.md 2>/dev/null` funciona en
+   bash y **falla en zsh**, porque un patrón sin coincidencias es un error del
+   *shell*, que ocurre antes de que el `2>/dev/null` pueda taparlo. Todas las
+   pruebas se habían corrido en bash; el usuario usa zsh. Se cambió por `find`.
+3. **Una advertencia falsa.** Ver arriba, los servidores MCP.
+
+La lección de fondo, y va a *Verification Rules*: **el entorno de prueba que no
+es el del usuario produce verdes que no valen**. Es la meta-regla 1 —medir el
+entorno— aplicada al que prueba, no al que falla.
 
 ## Riesgos
 

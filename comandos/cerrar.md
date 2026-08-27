@@ -45,7 +45,9 @@ done
 echo
 echo "--- QUÉ DISPARADOR YA SE ENCENDIÓ (¿hay contenido, no sólo la caja?)"
 GUIA=$(find "$PROJ/docs/guia" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')
-SPECS=$(ls "$PROJ/specs"/[0-9][0-9][0-9]-*.md 2>/dev/null | wc -l | tr -d ' ')
+# find y no ls: en zsh un patron sin coincidencias es un error del SHELL, que
+# ocurre ANTES de que el 2>/dev/null pueda taparlo. Medido el 2026-08-27.
+SPECS=$(find "$PROJ/specs" -maxdepth 1 -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ')
 CHLOG=$(grep -c '^- ' "$PROJ/CHANGELOG.md" 2>/dev/null); CHLOG=${CHLOG:-0}
 echo "  guía:      $GUIA archivo(s) en docs/guia/"
 echo "  specs:     $SPECS spec(s) numerada(s)"
