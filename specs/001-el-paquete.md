@@ -497,6 +497,57 @@ Y la proporción, que es la conclusión que más importa: 3.300 sobre 30.000 es 
 11%. El contexto largo y las respuestas largas cuestan más que todos los
 complementos juntos. **Este paso vale la pena y no es la palanca grande.**
 
+## El tamaño de `AGENTS.md`: qué se midió y qué dice la investigación
+
+**El tope de 20.000 bytes del proyecto de origen NO era para este archivo.** Era
+para `MEMORY.md`, el índice de memorias, y allá quedó anotado que *"los 20.000
+bytes son una alarma de umbral, no un corte"* — el archivo llegaba entero.
+
+**Medido el 2026-08-27:** un `AGENTS.md` de **121.459 bytes**, cargado por el
+`@import` de `CLAUDE.md`, llega **completo**, sin recorte y sin aviso. Se
+comprobó escondiendo un dato en el último renglón y preguntándolo sin permitir
+abrir archivos. Es 6× la alarma de memoria y 25% más que los 97 KB del caso malo
+conocido. **No hay techo técnico.**
+
+El número de **40 KB** que circula como "Claude Code avisa" **no se pudo
+verificar**: no aparece en la versión 2.1.247, y la única fuente que lo afirma
+—un linter de terceros— no cita nada. Tratarlo como folklore.
+
+Lo que sí hay es un costo, y tres hallazgos publicados que lo vuelven serio:
+
+1. **Todos los modelos empeoran a medida que crece la entrada** — 18 modelos de
+   frontera, Claude Opus 4 incluido. Degradación **gradual, sin precipicio**: no
+   hay número mágico que cruzar, se paga desde el primer kilobyte.
+2. **El texto presente pero irrelevante baja la precisión de forma medible.** Un
+   solo pasaje distractor ya empeora el resultado; cuatro lo empeoran más. Un
+   expediente de un bug viejo es exactamente eso para el 99% de las tareas.
+3. **Lo que está al PRINCIPIO se recupera mejor** que lo del medio. El orden del
+   archivo es funcional, no estético.
+
+Y el hallazgo que decide el diseño: **un archivo de instrucciones inflado hace
+que el modelo ignore las instrucciones EN BLOQUE, no que filtre las aburridas.**
+El fracaso es mudo — nadie avisa que dejó de obedecer.
+
+### Lo que se hace con eso
+
+- **No hay tope en bytes.** La degradación es continua, así que cualquier número
+  sería inventado, y un tope obliga a cortar lo que quedó abajo en vez de lo que
+  sobra.
+- **No se fragmenta.** Partir el archivo en varios `@import` no ahorra **nada**:
+  un import se carga entero. Sólo ahorra si los pedazos dejan de importarse, y
+  entonces dejan de leerse — que es justo el problema que el `@import` resolvió.
+- **Se corta el expediente y se guarda el cartel**, la misma regla que salvó al
+  índice de memoria. Está escrita adentro de *Rules That Cost Us*, que es la
+  única sección sin techo natural.
+- **El orden se declara load-bearing**: lo que no se puede violar arriba, las
+  tablas de referencia abajo.
+- **`/cerrar` muestra el precio** en cada cierre: bytes, tokens y qué porcentaje
+  del peaje típico (~29.000, medido). Sin alarma y sin número mágico: el que
+  mira decide.
+
+Fuentes: [Context Rot, Chroma](https://www.trychroma.com/research/context-rot) ·
+[Effective context engineering, Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+
 ## Riesgos
 
 - **Culto al cargo** (el N°1): copiar el contenido de aquel proyecto en vez de su

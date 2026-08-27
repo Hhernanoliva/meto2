@@ -84,6 +84,18 @@ else
   echo "  (este proyecto no tiene .mcp.json)"
 fi
 echo
+echo "--- LO QUE ESTE PROYECTO LE COBRA A CADA SESION"
+# El archivo del metodo se carga entero en cada sesion, para siempre. No hay
+# tope tecnico (medido: 121 KB entran sin recorte); hay un precio, y se muestra.
+for M in AGENTS.md AGENT.md CLAUDE.md; do
+  [ -f "$PROJ/$M" ] || continue
+  B=$(wc -c < "$PROJ/$M" | tr -d " ")
+  printf "  %-12s %7d bytes  ~%5d tokens  (~%d%% del peaje tipico de 29.000)\n" \
+    "$M" "$B" "$((B/4))" "$((B/4*100/29000))"
+done
+echo "  crece con cada regla nueva. Si sube rapido, el expediente esta adentro"
+echo "  en vez de en su spec: se corta el expediente, se guarda el cartel."
+echo
 echo "--- MEMORIA"
 SLUG="$(python3 -c "import re,sys;print(re.sub(r'[^A-Za-z0-9]','-',sys.argv[1]))" "$PROJ")"
 MEMDIR="$HOME/.claude/projects/$SLUG/memory"

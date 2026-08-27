@@ -93,6 +93,25 @@ How to write one when the day comes:
   next person will meet it again.
 - Keep the trap that made it hard to find. That is the part worth the tokens.
 
+**Cut the case file, keep the sign.** The headline and the trap stay here; the
+commit hashes, the test counts, the three findings and the blow-by-blow go to
+the spec, and the topic→spec table below points at it. This is the one section
+with no natural ceiling, and it is how an instructions file reaches 97 KB — the
+size measured in the project this method came from, about 24,000 tokens paid in
+every single session.
+
+Why that matters is not truncation. Measured 2026-08-27: a 121 KB file loads
+whole, with no warning and nothing cut. The cost is different and worse:
+published research on 18 frontier models found that **every one of them gets
+worse as input grows** — gradually, with no cliff — and that text which is
+present but irrelevant to the task at hand measurably lowers accuracy. A case
+file is exactly that: irrelevant to 99% of tasks, and paid for in all of them.
+
+**Order is load-bearing, so keep it.** The same research found information is
+retrieved best when it sits near the START of the context. That is why this file
+opens with what must never be violated and ends with the reference tables. New
+sections go where their urgency says, not at the bottom because that is easier.
+
 ## Verification Rules
 
 **These arrive filled in.** They are not about any one product — they are about
