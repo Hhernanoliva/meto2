@@ -8,6 +8,9 @@
    qué no viaja, el mapa de rutas medido, y las cuatro decisiones abiertas.
    **Abierta.** El disparador que `001` › decisión D dejó escrito se cumplió el
    2026-08-28: la primera usuaria que no es el autor usa OpenCode.
+3. `003-como-se-reparte.md` — instalar con un solo comando (`pnpm dlx`) sin
+   perder los enlaces, Node como requisito aceptado, y Python con fecha de
+   salida y disparador escrito. **Decidida, sin construir.**
 
 ## Where Detail Lives (topic → spec)
 
@@ -29,3 +32,7 @@ points at it and does not copy it.
 | El método en un segundo agente (OpenCode) | `002` |
 | Dónde vive cada cosa en Claude Code vs OpenCode | `002` › *El mapa* |
 | Qué se midió en la Mac de la primera usuaria | `002` › *Lo que se midió* |
+| Cómo se instala y por qué son dos puertas | `003` |
+| Por qué npm no puede instalar Python | `003` › *Lo que se midió* |
+| Python vs JavaScript, medido | `003` › *Lo que se midió* |
+| Cuándo se saca Python de encima | `003` › decisión H |
