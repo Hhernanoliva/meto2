@@ -20,8 +20,9 @@ tetoca() { TETOCA="$TETOCA
 # ---------------------------------------------------------------- 1. chequeos
 # Fallar por la mitad no es una opción: todo lo que hace falta se mira antes.
 FALTA=""
-command -v git  >/dev/null 2>&1 || FALTA="$FALTA git"
-command -v curl >/dev/null 2>&1 || FALTA="$FALTA curl"
+command -v git     >/dev/null 2>&1 || FALTA="$FALTA git"
+command -v curl    >/dev/null 2>&1 || FALTA="$FALTA curl"
+command -v python3 >/dev/null 2>&1 || FALTA="$FALTA python3"
 case "$(uname -s)" in
   Darwin|Linux) ;;
   *) echo "Este instalador anda en Mac y en Linux. En Windows todavía no."; exit 1 ;;

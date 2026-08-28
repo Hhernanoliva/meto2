@@ -77,3 +77,9 @@ implementa**, no al publicar.
   escribís `/arrancar`, no aparece, y lo lógico es concluir que la instalación
   falló. Si corriste el instalador desde adentro de Claude Code lo sabe con
   certeza y te lo dice como una orden; si no, te lo dice por las dudas
+- **El instalador comprueba que tengas Python antes de empezar, no después.**
+  Miraba que estuvieran `git` y `curl`, pero no Python — y lo necesita él mismo,
+  y lo necesitan `/arrancar` y `/cerrar`. En una Mac recién sacada de la caja eso
+  terminaba en el peor final posible: la instalación decía **listo**, y el
+  problema aparecía más tarde y disfrazado de otra cosa. Ahora frena en el primer
+  segundo y te da el comando exacto para arreglarlo
