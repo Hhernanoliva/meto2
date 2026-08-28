@@ -133,8 +133,17 @@ else
       ok "codebase-memory-mcp instalado"
     else
       ok "codebase-memory-mcp instalado en ~/.local/bin"
-      nopude "esa carpeta no está en el PATH de tu terminal, así que el programa no se encuentra por su nombre"
-      tetoca "Pegá esto y abrí una terminal nueva:  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc"
+      # Su instalador ya suele escribir el PATH en el .zshrc y DESPUES avisar que
+      # falta igual. Las dos cosas son ciertas: en la terminal abierta falta de
+      # verdad, porque todavia no releyo el archivo. Medir el estado correcto en
+      # el momento equivocado da un consejo que duplica la linea. Se le pregunta
+      # al archivo, no a la sesion actual.
+      if grep -qs '\.local/bin' "$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; then
+        tetoca "Abrí una terminal nueva y ya lo vas a encontrar: la línea del PATH ya quedó escrita en tu configuración. No la pegues de nuevo."
+      else
+        nopude "esa carpeta no está en el PATH de tu terminal, así que el programa no se encuentra por su nombre"
+        tetoca "Pegá esto y abrí una terminal nueva:  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc"
+      fi
     fi
   else
     nopude "no pude instalar codebase-memory-mcp (falló la descarga)"
@@ -153,20 +162,25 @@ HOOKTXT="Before answering: re-read who you are writing for in ~/.claude/CLAUDE.m
 if [ "$SI" != "si" ]; then
   cat <<TXT
 
-Una cosa más, opcional. No baja nada: cambia un archivo de configuración tuyo.
+Una cosa más, opcional, y **es sólo para Claude Code**. No baja nada: cambia un
+archivo de configuración tuyo.
 
-El problema que arregla: en una carpeta cualquiera, Claude te explica las cosas
-como si fueras programador. En los proyectos que armes con /arrancar eso ya
-queda resuelto; afuera de ellos, no.
+Si trabajás con otro agente, decí que no. Esto se escribe en un archivo que sólo
+lee Claude Code, así que en las demás herramientas no haría absolutamente nada —
+y es peor tenerlo puesto creyendo que te cubre.
 
-Lo que hace, y es una sola cosa: antes de contestarte, Claude pasa por tu
+El problema que arregla: en una carpeta cualquiera, Claude Code te explica las
+cosas como si fueras programador. En los proyectos que armes con /arrancar eso
+ya queda resuelto; afuera de ellos, no.
+
+Lo que hace, y es una sola cosa: antes de contestarte, Claude Code pasa por tu
 archivo $GLOBAL y lee cómo querés que te hablen.
 Eso lo escribís vos y lo cambiás cuando quieras.
 
 Acá no queda guardada ninguna copia de lo que digas de vos — sólo la dirección
 donde está. Por eso no se desactualiza nunca.
 
-Para sacarlo mañana, pedile a Claude: "sacame el recordatorio que puso meto2".
+Para sacarlo mañana, pedile a Claude Code: "sacame el recordatorio que puso meto2".
 
 TXT
   printf "¿Lo agrego? [s/N] "
@@ -174,7 +188,7 @@ TXT
   case "$RH" in
     s|S|si|Si|SI|y|Y|yes)
       if python3 "$REPO/memoria/agregar-hook.py" "$HOME/.claude/settings.json" "$HOOKTXT"; then
-        ok "recordatorio de para quién escribir, activo en cada mensaje"
+        ok "recordatorio de para quién escribir, activo en cada mensaje de Claude Code"
       else
         nopude "no pude agregar el recordatorio a tu settings.json"
       fi

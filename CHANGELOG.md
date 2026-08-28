@@ -83,3 +83,15 @@ implementa**, no al publicar.
   terminaba en el peor final posible: la instalación decía **listo**, y el
   problema aparecía más tarde y disfrazado de otra cosa. Ahora frena en el primer
   segundo y te da el comando exacto para arreglarlo
+- **El instalador ya no te manda a escribir dos veces la misma línea.** Cuando
+  instala `codebase-memory-mcp`, el instalador de ellos deja escrita una línea en
+  la configuración de tu terminal y **acto seguido avisa que falta igual** — las
+  dos cosas son ciertas, porque la terminal que tenés abierta todavía no releyó
+  el archivo. `meto2` le creía a la segunda y te decía que pegaras la línea, que
+  ya estaba. Ahora mira el archivo en vez de la terminal, y si ya está te dice lo
+  único que hace falta: abrí una terminal nueva
+- **La pregunta opcional del final dice a qué herramienta afecta.** Es un cambio
+  que sólo lee Claude Code. Si trabajás con otro agente ahora te lo avisa y te
+  dice que contestes que no, en vez de dejarte un recordatorio que en tu máquina
+  no hace nada mientras el resumen te dice que sí. Descubierto en la primera
+  instalación hecha por alguien que no es el autor, en una Mac que usa OpenCode
