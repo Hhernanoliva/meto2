@@ -162,7 +162,7 @@ HOOKTXT="Before answering: re-read who you are writing for in ~/.claude/CLAUDE.m
 if [ "$SI" != "si" ]; then
   cat <<TXT
 
-Una cosa más, opcional, y **es sólo para Claude Code**. No baja nada: cambia un
+Una cosa más, opcional, y es sólo para Claude Code. No baja nada: cambia un
 archivo de configuración tuyo.
 
 Si trabajás con otro agente, decí que no. Esto se escribe en un archivo que sólo
