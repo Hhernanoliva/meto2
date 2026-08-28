@@ -72,8 +72,16 @@ Plan first, in simple language, then approval, then code.
 
 ## Technical Direction
 
-`bash` (POSIX-ish, must also survive `zsh`), markdown, and Python 3 with the
-standard library only. **No dependencies, no package manager, no build step.**
+**What this package contains:** `bash` (POSIX-ish, must also survive `zsh`),
+markdown, and Python 3 with the standard library only. **No dependencies, no
+build step.** Unchanged, and it is a rule about *content*.
+
+**How it is delivered** is a separate question, settled in `specs/003`: npm is
+one of two doors (`pnpm dlx meto2`), `git clone` is the other, and both end in
+the same `instalar.sh`. `package.json` declares **zero** dependencies and the
+verify skill fails if one ever appears. A package manager used as a delivery
+channel is not a package manager in the code — do not read the second paragraph
+as permission to loosen the first.
 
 - Commands are markdown files symlinked into the agent's command folder, so
   editing the repo takes effect everywhere immediately.
@@ -90,6 +98,8 @@ to clone (collides when the project starts from a generator).
 ## Application Architecture
 
 ```
+bin/meto2.js    the npm door: brings the repo down and hands off to instalar.sh
+package.json    zero dependencies, and a check in the verify skill that keeps it so
 instalar.sh     stage 1, once per machine: symlinks, plugins, the MCP binary
 comandos/       the three commands: arrancar, cerrar, simple
 plantillas/     the empty boxes /arrancar copies into a project

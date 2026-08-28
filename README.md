@@ -17,14 +17,31 @@ que vengan después.
 
 ## Instalación
 
-### Paso 0 — traelo
+### Paso 1 — una vez por computadora
+
+Un comando:
+
+```bash
+pnpm dlx meto2
+```
+
+Trae `meto2` a `~/Projects/meto2` y corre el instalador. Si esa carpeta ya existe
+y es `meto2`, la actualiza; si existe y es otra cosa, **se frena y no la toca**.
+Para elegir otra carpeta: `METO2_DIR=~/donde/quieras pnpm dlx meto2`.
+
+**La otra puerta**, si vas a tocar el código de `meto2` o preferís no usar npm:
 
 ```bash
 git clone https://github.com/Hhernanoliva/meto2.git ~/Projects/meto2
+bash ~/Projects/meto2/instalar.sh
 ```
 
-Necesitás **Claude Code** ya instalado, más `git`, `curl` y `python3`. Anda en
-Mac y en Linux; en Windows todavía no.
+Las dos dejan exactamente lo mismo, enlaces incluidos. La primera es un comando
+en vez de dos; la segunda es la de siempre.
+
+Necesitás **Claude Code** ya instalado, más `git`, `curl` y `python3` — y Node si
+usás la primera puerta, que ya lo tenés si tenés `pnpm`. Anda en Mac y en Linux;
+en Windows todavía no.
 
 Un detalle que le toca sólo a quien vaya a abrir **meto2 en sí** con Claude Code,
 no a quien lo use en sus proyectos: el `.mcp.json` de este repo trae adentro la
@@ -32,11 +49,7 @@ ruta de la máquina donde se escribió. Cambiá ese único renglón
 (`CBM_ALLOWED_ROOT`) por la ruta de tu copia. No es un olvido y no es silencioso:
 `/cerrar` lo compara con la carpeta actual y te avisa.
 
-### Paso 1 — una vez por computadora
-
-```bash
-bash ~/Projects/meto2/instalar.sh
-```
+#### Qué hace el instalador
 
 Ojo, y lo decimos acá porque conviene saberlo antes: este paso **baja software de
 internet que no es nuestro** —cuatro complementos de Claude Code y un programa de

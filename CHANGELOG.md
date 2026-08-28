@@ -95,3 +95,12 @@ implementa**, no al publicar.
   dice que contestes que no, en vez de dejarte un recordatorio que en tu máquina
   no hace nada mientras el resumen te dice que sí. Descubierto en la primera
   instalación hecha por alguien que no es el autor, en una Mac que usa OpenCode
+- **Instalar meto2 pasa a ser un comando en vez de dos.** `pnpm dlx meto2` trae
+  el paquete y corre el instalador de una. Antes había que clonar el repo primero
+  y después acordarse de dónde había quedado — y la primera persona que lo
+  instaló sin ser el autor se equivocó de carpeta tres veces **antes** de llegar
+  al instalador. La puerta vieja sigue estando igual para quien vaya a tocar el
+  código. Las dos terminan en el mismo lugar, y en las dos los comandos quedan
+  como enlaces, así que un arreglo te sigue llegando solo
+- **Si esa carpeta ya existía, no la pisa.** Si ya tenías meto2 ahí, lo actualiza.
+  Si había otra cosa, se frena y te lo dice en vez de escribir encima

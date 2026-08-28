@@ -1,0 +1,10 @@
+{
+  "name": "meto2",
+  "version": "0.1.0",
+  "description": "El método, empaquetado. Un comando deja el esqueleto entero para trabajar con agentes en cualquier proyecto, sin arrastrar ninguna tecnología.",
+  "bin": { "meto2": "bin/meto2.js" },
+  "files": ["bin"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/Hhernanoliva/meto2.git" },
+  "engines": { "node": ">=18" }
+}

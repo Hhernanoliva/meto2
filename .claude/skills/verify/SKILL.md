@@ -18,6 +18,13 @@ grep -riE 'svelte|tailwind|react|vue|django|rails|pnpm|npm run|/Users/|/home/' \
   plantillas/ comandos/ | grep -v 'Technical Direction' \
   | grep -v 'skills/verify' | grep -v 'settings.json'
 # must give ZERO. The core names no technology outside its three seams.
+
+node -e "const p=require('./package.json');
+  const n=Object.keys(p.dependencies||{}).length+Object.keys(p.devDependencies||{}).length;
+  if(n){console.error('package.json declares '+n+' dependency(ies). It must declare zero.');process.exit(1)}
+  console.log('package.json: zero dependencies')"
+# must exit 0. specs/003 accepts npm as a DELIVERY channel only; a dependency
+# here would quietly turn that into a dependency in the code.
 ```
 
 ## Driving a command by hand
