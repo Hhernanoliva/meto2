@@ -12,6 +12,10 @@ hace **el día que haya un segundo agente en uso de verdad**, no antes."*
 > Esta spec no construye nada todavía. Nombra lo que se midió, lo que viaja
 > gratis, lo que no viaja, y **las cuatro decisiones** que hay que tomar antes de
 > escribir una línea.
+>
+> **Actualizada el 2026-08-29: D1 quedó resuelta midiendo.** Resultó que el autor
+> tiene OpenCode instalado, así que la mitad de este port se puede probar sin
+> esperar a nadie. Quedan tres decisiones: D2, D3 y D4.
 
 ## En criollo
 
@@ -116,31 +120,37 @@ verificadas**. No hay que adivinar dónde va nada: está medido en una máquina 
 | skills | `.claude/skills/<n>/SKILL.md` | `~/.config/opencode/skills/<n>/SKILL.md` | **medido** |
 | agentes | `~/.claude/agents/*.md` | `~/.config/opencode/agents/*.md` | **medido** |
 | hook por mensaje | un renglón en `settings.json` | un plugin **`.ts`** en `~/.config/opencode/plugins/` | **medido** |
-| comandos | `~/.claude/commands/*.md` | `.opencode/command/*.md` (por proyecto) | doc oficial |
-| cabecera del comando | `allowed-tools:` | `description:` · `agent:` · `model:` | doc oficial |
-| carpeta global de comandos | `~/.claude/commands/` | **sin confirmar** — hay `OPENCODE_CONFIG_DIR` | **no verificado** |
+| carpeta global de comandos | `~/.claude/commands/` | `~/.config/opencode/command/` | **medido** |
+| cabecera del comando | `allowed-tools:` | `description:` · `agent:` · `model:` — **y las claves que no conoce las ignora** | **medido** |
 
-Los dos últimos renglones son de la documentación, no de una corrida. **Se
-comprueban en su máquina antes de construir**, que es la meta-regla 1 aplicada al
-que prueba.
+**Ya no queda nada sin verificar en este mapa.** Se midió el 2026-08-29 en la
+máquina del autor, que resultó tener OpenCode 1.18.23 instalado — ver abajo.
 
 ## Las cuatro decisiones
 
-### D1 · Dónde viven los comandos, y si son enlaces
+### D1 · Dónde viven los comandos — RESUELTA el 2026-08-29, midiendo
 
-En Claude Code los tres comandos son **enlaces** al repo, y de ahí sale una
-propiedad central: se arregla el repo y el arreglo ya está activo en todos los
-proyectos. En OpenCode la carpeta documentada es **por proyecto**
-(`.opencode/command/`), no por computadora.
+**Existe carpeta global y es `~/.config/opencode/command/`.** Se puso un archivo
+ahí y `opencode debug config` pasó de ver 0 comandos a ver 1. Después se
+enlazaron los tres comandos reales del repo y OpenCode vio los tres, leyó sus
+descripciones, y **siguió los enlaces simbólicos sin problema**.
 
-Si sólo hay carpeta por proyecto, la propiedad se rompe: cada proyecto nuevo hay
-que enlazarlo otra vez, y `/arrancar` pasa a tener una tarea más.
+Más: la cabecera **no hay que cambiarla**. `arrancar.md` declara
+`allowed-tools: Bash, Read, Edit, Write, AskUserQuestion`, que es una clave de
+Claude Code, y OpenCode la ignoró sin una queja mientras tomaba el `description:`
+que sí entiende.
 
-- **a)** Confirmar primero si existe carpeta global. Si existe, es igual que hoy.
-- **b)** Si no existe: `/arrancar` deja los enlaces en `.opencode/command/` de
-  cada proyecto. Un enlace por proyecto, hecho por el comando, no por la persona.
-- **c)** No portar los comandos. Quedan como markdown que se lee y se ejecuta a
-  mano, tal cual dice hoy la decisión D.
+**Consecuencia, y es la mejor posible:** los tres archivos de `comandos/` sirven
+**tal como están** en los dos agentes, y la propiedad de los enlaces —se arregla
+el repo y el arreglo está activo en todos lados— se conserva entera. `instalar.sh`
+sólo tiene que enlazar en una carpeta más.
+
+**Lo que esto NO probó, y hay que decirlo:** que los comandos *funcionen*. Se
+midió que OpenCode los **encuentra y los lee**. El cuerpo de `arrancar.md`
+menciona `~/.claude` diez veces y el de `cerrar.md` dos —para resolver dónde
+está el repo, dónde vive la memoria, y para contar los complementos— y eso sigue
+siendo trabajo pendiente. Encontrarlos era la incógnita de diseño; hacerlos
+andar es tarea.
 
 ### D2 · El apagado de complementos no tiene equivalente
 
@@ -235,8 +245,9 @@ Dos defectos que la corrida destapó y que **no dependen de OpenCode**:
 Además del gate de 6 pasos de `001`, esta spec no está lista hasta que, **en la
 máquina de ella y con ella mirando**:
 
-1. Se confirmen los dos renglones *no verificados* del mapa: si OpenCode tiene
-   carpeta global de comandos, y cuál es.
+1. ~~Se confirmen los dos renglones *no verificados* del mapa.~~ **Hecho el
+   2026-08-29** en la máquina del autor: carpeta global `~/.config/opencode/command/`,
+   enlaces simbólicos seguidos, cabecera de Claude Code aceptada sin cambios.
 2. `/arrancar` corra desde OpenCode en una carpeta nueva y deje los 8 archivos.
 3. `/cerrar` corra desde OpenCode y **no escriba nada**.
 4. El resumen de la instalación **no afirme ni una sola cosa que en su máquina
