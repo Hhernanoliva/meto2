@@ -104,3 +104,15 @@ implementa**, no al publicar.
   como enlaces, así que un arreglo te sigue llegando solo
 - **Si esa carpeta ya existía, no la pisa.** Si ya tenías meto2 ahí, lo actualiza.
   Si había otra cosa, se frena y te lo dice en vez de escribir encima
+- **El instalador te pregunta con qué agente trabajás, y deja de dar por sentado
+  que es Claude Code.** Mira cuáles tenés instalados —Claude Code y OpenCode— y,
+  si encuentra los dos, pregunta cuál usás de verdad. Que algo esté instalado no
+  quiere decir que lo uses: la primera persona que instaló meto2 sin ser la
+  autora tenía la carpeta de Claude Code pero trabaja con OpenCode, y el
+  instalador le anunció tres cosas que en su máquina no servían para nada
+- **Los mismos tres comandos funcionan en los dos agentes.** No hay dos versiones
+  ni hay que traducir nada: quedan como enlaces en la carpeta de cada uno, así
+  que un arreglo sigue llegando solo a todos lados
+- **Y cuando algo no existe para tu agente, te lo dice.** Si usás OpenCode, los
+  cuatro complementos y el recordatorio no existen ahí — el resumen te lo nombra
+  en vez de saltearlo en silencio, que es la forma elegante de mentir

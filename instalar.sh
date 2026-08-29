@@ -5,7 +5,6 @@
 set -u
 
 REPO="$(cd "$(dirname "$0")" && pwd)"
-CMDDIR="$HOME/.claude/commands"
 SI="no"
 [ "${1:-}" = "--si" ] || [ "${1:-}" = "-y" ] && SI="si"
 
@@ -37,30 +36,68 @@ if [ -n "$FALTA" ]; then
   echo "  Después volvé a correr:  bash $0"
   exit 1
 fi
-if [ ! -d "$HOME/.claude" ]; then
-  echo "No encuentro la carpeta ~/.claude, así que Claude Code no está instalado en esta"
-  echo "computadora (o nunca se abrió). Abrilo una vez y volvé a correr:  bash $0"
+# ------------------------------------------- 1b. con que agente se trabaja
+# Se detecta y DESPUES se pregunta. Detectar solo no alcanza: medido el
+# 2026-08-28 en la maquina de la primera usuaria que no es el autor, ~/.claude
+# existia y ella NO usa Claude Code. Instalar ahi y anunciarlo como exito fue el
+# defecto que origino specs/002.
+USA_CLAUDE="no";   [ -d "$HOME/.claude" ]          && USA_CLAUDE="si"
+USA_OPENCODE="no"; [ -d "$HOME/.config/opencode" ] && USA_OPENCODE="si"
+
+if [ "$USA_CLAUDE" = "no" ] && [ "$USA_OPENCODE" = "no" ]; then
+  echo "No encuentro ningún agente instalado en esta computadora."
+  echo
+  echo "  Claude Code guarda su configuración en   ~/.claude"
+  echo "  OpenCode guarda la suya en               ~/.config/opencode"
+  echo
+  echo "Instalá alguno de los dos, abrilo una vez, y volvé a correr:  bash $0"
   exit 1
+fi
+
+if [ "$SI" != "si" ] && [ "$USA_CLAUDE" = "si" ] && [ "$USA_OPENCODE" = "si" ]; then
+  cat <<TXT
+
+Encontré los dos agentes en esta computadora: Claude Code y OpenCode.
+
+Que estén instalados no quiere decir que los uses. Si dejo meto2 en uno que no
+usás, te voy a anunciar algo que después no vas a poder usar — así que pregunto.
+
+TXT
+  printf "¿Usás Claude Code? [S/n] "; read -r RAG
+  case "$RAG" in n|N|no|No|NO) USA_CLAUDE="no" ;; esac
+  printf "¿Usás OpenCode?    [S/n] "; read -r RAG
+  case "$RAG" in n|N|no|No|NO) USA_OPENCODE="no" ;; esac
+  if [ "$USA_CLAUDE" = "no" ] && [ "$USA_OPENCODE" = "no" ]; then
+    echo
+    echo "Dijiste que no usás ninguno de los dos, así que no hice nada."
+    exit 0
+  fi
 fi
 
 # ------------------------------------------------------------- 2. el permiso
 # Una sola pregunta, al principio. Después no vuelve a preguntar nada.
-cat <<TXT
-
-Voy a bajar de internet software que no es mío:
-
+echo
+echo "Voy a bajar de internet software que no es mío:"
+echo
+if [ "$USA_CLAUDE" = "si" ]; then
+  cat <<TXT
   · 4 complementos de Claude Code, desde GitHub:
       superpowers      github.com/anthropics/claude-plugins-official
       ponytail         github.com/DietrichGebert/ponytail
       caveman          github.com/JuliusBrussee/caveman
       context7         github.com/upstash/context7
+TXT
+fi
+cat <<TXT
   · codebase-memory-mcp, con el instalador oficial de ellos:
       github.com/DeusData/codebase-memory-mcp
 
-Además voy a dejar tres comandos nuevos en $CMDDIR
-(enlaces al repo que ya tenés acá, eso no baja nada).
-
+Además voy a dejar tres comandos nuevos acá (enlaces al repo que ya tenés en
+esta carpeta, eso no baja nada):
 TXT
+[ "$USA_CLAUDE" = "si" ]   && echo "      $HOME/.claude/commands           (Claude Code)"
+[ "$USA_OPENCODE" = "si" ] && echo "      $HOME/.config/opencode/command   (OpenCode)"
+echo
 if [ "$SI" != "si" ]; then
   printf "¿Sigo? [s/N] "
   read -r RESP
@@ -69,17 +106,24 @@ fi
 echo
 
 # ------------------------------------------------------------- 3. los comandos
-mkdir -p "$CMDDIR"
-for c in arrancar cerrar simple; do
-  DEST="$CMDDIR/$c.md"
-  if [ -e "$DEST" ] && [ ! -L "$DEST" ]; then
-    nopude "Ya había un archivo propio en $DEST y no lo pisé."
-    tetoca "Si ese comando no te sirve, borralo y volvé a correr este instalador."
-  else
-    ln -sfn "$REPO/comandos/$c.md" "$DEST" && ok "/$c disponible en Claude Code" \
-      || nopude "no pude crear el enlace $DEST"
-  fi
-done
+# Los mismos tres archivos sirven en los dos agentes: medido el 2026-08-29,
+# OpenCode los encuentra por enlace simbolico e ignora sin quejarse la cabecera
+# 'allowed-tools' que es de Claude Code. No hay que traducir nada.
+enlazar_en() {   # $1 = carpeta de comandos   $2 = nombre del agente
+  mkdir -p "$1"
+  for c in arrancar cerrar simple; do
+    DEST="$1/$c.md"
+    if [ -e "$DEST" ] && [ ! -L "$DEST" ]; then
+      nopude "Ya había un archivo propio en $DEST y no lo pisé."
+      tetoca "Si ese comando no te sirve, borralo y volvé a correr este instalador."
+    else
+      ln -sfn "$REPO/comandos/$c.md" "$DEST" && ok "/$c disponible en $2" \
+        || nopude "no pude crear el enlace $DEST"
+    fi
+  done
+}
+[ "$USA_CLAUDE" = "si" ]   && enlazar_en "$HOME/.claude/commands" "Claude Code"
+[ "$USA_OPENCODE" = "si" ] && enlazar_en "$HOME/.config/opencode/command" "OpenCode"
 
 # ------------------------------------------------------------- 4. los plugins
 # Esta es la parte lenta y hasta ahora era la parte muda: la pantalla quedaba en
@@ -91,7 +135,13 @@ done
 # afirmacion, no un resultado", aplicada a lo que mira el usuario.
 PLUG_TOTAL=4   # tiene que coincidir con las llamadas a instalar_plugin de abajo
 PLUG_N=0
-if command -v claude >/dev/null 2>&1; then
+if [ "$USA_CLAUDE" = "no" ]; then
+  # No es una falla: es un hueco, y specs/002 > D2 manda nombrarlo en voz alta
+  # en vez de saltearlo en silencio. Los 4 complementos son de Claude Code y en
+  # OpenCode no existen; alla hay otro sistema, que todavia no miramos.
+  nopude "los $PLUG_TOTAL complementos del método son de Claude Code y en OpenCode no existen, así que no instalé ninguno"
+  tetoca "Nada que hacer hoy. Si algún día usás Claude Code, volvé a correr este instalador y se instalan solos."
+elif command -v claude >/dev/null 2>&1; then
   # 'claude plugin install' devuelve 0 aunque falle (medido: un nombre que no
   # existe en el mercado sale 0 e imprime el error). El unico chequeo que sirve
   # es preguntarle despues a 'claude plugin list' si el complemento esta.
@@ -159,7 +209,13 @@ fi
 # Asi no se desactualiza, y sirve igual para cualquier persona en cualquier PC.
 GLOBAL="$HOME/.claude/CLAUDE.md"
 HOOKTXT="Before answering: re-read who you are writing for in ~/.claude/CLAUDE.md, and write for THAT person. A rule read once at startup loses to everything that arrives after it."
-if [ "$SI" != "si" ]; then
+if [ "$USA_CLAUDE" = "no" ]; then
+  # specs/002 > D3 sigue abierta: en OpenCode el equivalente es un plugin en
+  # TypeScript, y la Technical Direction de este paquete dice que aca no hay
+  # paso de compilacion. Hasta que se decida, no existe — y se dice.
+  nopude "el recordatorio de para quién escribir todavía no existe para OpenCode"
+  tetoca "Mientras tanto, escribí cómo querés que te hablen en el AGENTS.md de cada proyecto: la sección Collaboration Style es justo eso."
+elif [ "$SI" != "si" ]; then
   cat <<TXT
 
 Una cosa más, opcional, y es sólo para Claude Code. No baja nada: cambia un
@@ -225,7 +281,7 @@ printf '%s\n' "─────────────────────�
 # CLAUDECODE=1 lo setea Claude Code cuando el comando corre desde adentro
 # (medido 2026-08-27: 'echo $CLAUDECODE' devuelve 1). Ahi la certeza es total y
 # el aviso deja de ser condicional.
-if [ -n "${CLAUDECODE:-}" ]; then
+if [ -n "${CLAUDECODE:-}" ] && [ "$USA_CLAUDE" = "si" ]; then
   cat <<TXT
 
 ⚠️  Estás corriendo esto desde adentro de Claude Code, y esta sesión NO ve los
@@ -235,15 +291,18 @@ TXT
 else
   cat <<TXT
 
-Si tenías Claude Code abierto mientras corría esto, cerralo y volvé a entrar: la
+Si tenías tu agente abierto mientras corría esto, cerralo y volvé a entrar: la
 lista de comandos la lee al empezar la sesión, así que hasta entonces /arrancar
 no le figura.
 TXT
 fi
 
+AGENTES_OK=""
+[ "$USA_CLAUDE" = "si" ]   && AGENTES_OK="Claude Code"
+[ "$USA_OPENCODE" = "si" ] && AGENTES_OK="${AGENTES_OK:+$AGENTES_OK o }OpenCode"
 cat <<TXT
 
-Cómo se usa: entrá con Claude Code a la carpeta de un proyecto y escribí
+Cómo se usa: entrá con $AGENTES_OK a la carpeta de un proyecto y escribí
 /arrancar. Al terminar una sesión de trabajo, /cerrar.
 TXT
 

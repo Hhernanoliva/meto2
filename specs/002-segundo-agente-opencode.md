@@ -194,7 +194,25 @@ llega después*. Si en OpenCode la única opción sin código es exactamente esa
 regla débil, entonces la (c) es la que ya se sabe que falla, y la decisión real
 es entre (a) y (b).
 
-### D4 · Un instalador que pregunta, o dos instaladores
+### D4 · Un instalador que pregunta — RESUELTA y CONSTRUIDA el 2026-08-29
+
+**Se eligió detectar y después preguntar**, que no era ninguna de las tres
+opciones de abajo sino la mezcla de las dos primeras. El motivo lo dio la
+medición: detectar solo no alcanza, porque en la Mac de la primera usuaria la
+carpeta `~/.claude` **existía** y ella no usa Claude Code. Detectar sin
+preguntar habría repetido exactamente el ✅ falso que originó esta spec.
+
+Lo que hace ahora: mira si están `~/.claude` y `~/.config/opencode`; si no hay
+ninguno, frena y explica; si hay uno solo, sigue sin preguntar nada; si hay dos,
+pregunta uno por uno con la razón escrita al lado. Los complementos y el
+recordatorio quedan detrás de *¿usás Claude Code?*, y cuando no aplican **se
+nombran en el resumen** en vez de desaparecer.
+
+Probado en cinco escenarios con una carpeta de casa falsa: sin agentes, sólo
+OpenCode, los dos diciendo que no a ambos, los dos eligiendo sólo OpenCode, y
+sólo Claude Code como regresión. En ninguno quedó un ✅ que no fuera cierto.
+
+Las opciones que se consideraron:
 
 Hoy `instalar.sh` asume Claude Code desde la primera línea: comprueba `~/.claude`,
 y si no está, sale.
